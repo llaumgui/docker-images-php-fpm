@@ -1,0 +1,12 @@
+#!/bin/bash
+
+COLLECTION="rh-php56"
+
+source /opt/rh/${COLLECTION}/enable
+
+args=
+for arg in "$@"; do
+  args="$args '$arg'"
+done
+
+eval exec php $args
