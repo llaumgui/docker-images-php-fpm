@@ -1,20 +1,18 @@
-# Apache
+# Apache Container
 FROM centos:7
 MAINTAINER Guillaume Kulakowski <guillaume@kulakowski.fr>
 
 LABEL Description="CentOS HTTPd 2.4.12 from SCL"
 LABEL Vendor="Guillaume Kulakowski"
 LABEL License=MIT
-LABEL Version=2.4-1.0
-
-EXPOSE 80
+LABEL Version=2.4-1.1
 
 # Install HTTPD24 collection from SCL.
-RUN yum localinstall -y https://www.softwarecollections.org/en/scls/rhscl/httpd24/epel-7-x86_64/download/rhscl-httpd24-epel-7-x86_64.noarch.rpm
-
-# Install HTTPd 2.4 from SCL.
-RUN yum update -y && yum install -y httpd24 \
-  httpd24-httpd-tools && yum clean all
+RUN yum update -y && \
+    yum install -y centos-release-scl && \
+    yum install -y httpd24 \
+                   httpd24-httpd-tools && \
+    yum clean all
 
 # Symlink.
 RUN ln -s /opt/rh/httpd24/root/etc/httpd/ /etc
@@ -28,6 +26,7 @@ RUN rm -f /etc/httpd/conf.d/welcome.conf
 ADD files/run-httpd.sh /run-httpd.sh
 RUN chmod -v +x /run-httpd.sh
 
+EXPOSE 80
 WORKDIR /var/www
 
 CMD ["/run-httpd.sh"]
