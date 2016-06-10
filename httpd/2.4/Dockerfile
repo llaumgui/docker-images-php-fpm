@@ -23,8 +23,8 @@ RUN mkdir /etc/httpd/vhost.d
 RUN rm -f /etc/httpd/conf.d/welcome.conf
 
 # Use MPM event.
-sed -i 's/LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
-sed -i 's/#LoadModule mpm_event_module/LoadModule mpm_event_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
+RUN sed -i 's/LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/g' /etc/httpd/conf.modules.d/00-mpm.conf && \
+    sed -i 's/#LoadModule mpm_event_module/LoadModule mpm_event_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
 
 # Simple startup script to avoid some issues observed with container restart.
 ADD files/run-httpd.sh /run-httpd.sh
