@@ -59,36 +59,29 @@ RUN ln -s /etc/opt/rh/rh-php56/php.d/ /etc && \
     mkdir -p /var/www
 
 # Install /usr/bin/php.
-COPY bin/php /usr/bin/php
-RUN chmod +x /usr/bin/php
+COPY bin /usr/bin
+RUN chmod +x /usr/bin/*
 
 # Install composer.
 RUN mkdir -p /opt/org/composer
 ADD https://getcomposer.org/composer.phar /opt/org/composer/composer.phar
-COPY bin/composer /usr/bin/composer
-RUN chmod +x /usr/bin/composer
+RUN chmod 755 /opt/org/composer/composer.phar
 
 # Install Drush from git.
 RUN git clone https://github.com/drush-ops/drush.git /opt/drush && \
-    cd /opt/drush && \
-    git checkout 7.0.0 && \
-    composer install && \
-    ln -s /opt/drush/drush /usr/bin/drush 
+    cd /opt/drush && git checkout 7.0.0 && composer install && \
+    ln -s /opt/drush/drush /usr/bin/drush
 
 # Install php-fpm-cli from https://gist.github.com/muhqu/91497df3a110f594b992.
 ADD https://gist.githubusercontent.com/muhqu/91497df3a110f594b992/raw/58bf4ee037b637c24dea2f80a8c6735d5229f4d6/php-fpm-cli /usr/bin/php-fpm-cli
 RUN chmod +x /usr/bin/php-fpm-cli
 
-# Install purge_cache.
-ADD bin/purge_cache /usr/bin/purge_cache
-RUN chmod +x /usr/bin/purge_cache
-
 # My configuration.
-COPY php.d /etc/php.d/
-COPY etc /etc/opt/rh/rh-php56
 RUN sed -i "s/listen = 127.0.0.1:9000/listen = [::]:9000/g" /etc/php-fpm.d/www.conf && \
     sed -i "s/listen.allowed_clients = /;listen.allowed_clients = /g" /etc/php-fpm.d/www.conf && \
     sed -i "/^;security.limit_extensions =.*/asecurity.limit_extensions = .php .php5 .php56" /etc/php-fpm.d/www.conf
+COPY php.d /etc/php.d/
+COPY etc /etc/opt/rh/rh-php56
 
 EXPOSE 9000
 WORKDIR /var/www
