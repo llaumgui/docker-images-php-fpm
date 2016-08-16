@@ -11,7 +11,8 @@ LABEL Version=2.4-1.1
 RUN yum update -y && \
     yum install -y centos-release-scl && \
     yum install -y httpd24 \
-                   httpd24-httpd-tools && \
+                   httpd24-httpd-tools \
+                   httpd24-mod_ssl && \
     yum clean all
 
 # Symlink.
@@ -31,6 +32,7 @@ ADD files/run-httpd.sh /run-httpd.sh
 RUN chmod -v +x /run-httpd.sh
 
 EXPOSE 80
+EXPOSE 443
 WORKDIR /var/www
 
 CMD ["/run-httpd.sh"]
