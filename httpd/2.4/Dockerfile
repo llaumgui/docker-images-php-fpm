@@ -21,6 +21,7 @@ RUN ln -s /opt/rh/httpd24/root/etc/httpd/ /etc
 # My configuration.
 COPY conf.d /etc/httpd/conf.d
 RUN mkdir /etc/httpd/vhost.d
+RUN mkdir /etc/httpd/ssl
 RUN rm -f /etc/httpd/conf.d/welcome.conf
 
 # Use MPM event.
