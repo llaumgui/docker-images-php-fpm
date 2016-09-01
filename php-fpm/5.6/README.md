@@ -14,6 +14,18 @@ PHP 5.6 image build with:
  * A purge_cache script to purge APCu's cache.
 
 ## Usage
+### With docker client
+You can run this container with docker client:
+~~~bash
+docker run -d \
+  --volumes /etc/localtime:/etc/localtime:ro \
+  --volumes /docker/volumes/www:/var/www \
+  --volumes /docker/volumes/php56/log:/var/log/php-fpm \
+  --expose 9000 \
+  llaumgui/centos7-scl-php56
+~~~
+
+### With compose
 You can use this container in a docker-compose.yml file:
 ~~~yaml
   php56:
@@ -23,9 +35,8 @@ You can use this container in a docker-compose.yml file:
     mem_limit: 2g
     volumes:
      - /etc/localtime:/etc/localtime:ro
-     - /docker/volumes/www:/var/www/
-     - /docker/volumes/conf/php56/90-custom.ini:/etc/php.d/90-custom.ini:ro
-     - /docker/volumes/log/php56:/var/log/php-fpm
+     - /docker/volumes/www:/var/www
+     - /docker/volumes/php56/log:/var/log/php-fpm
     expose:
      - 9000
 ~~~

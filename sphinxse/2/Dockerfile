@@ -5,7 +5,7 @@ MAINTAINER Guillaume Kulakowski <guillaume@kulakowski.fr>
 LABEL Description="Sphinx Search Engine 2"
 LABEL Vendor="Guillaume Kulakowski"
 LABEL License=MIT
-LABEL Version=2-1.1
+LABEL Version=2-1.2
 
 EXPOSE 9312
 
