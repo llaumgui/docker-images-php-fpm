@@ -28,6 +28,10 @@ RUN rm -f /etc/httpd/conf.d/welcome.conf
 RUN sed -i 's/LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/g' /etc/httpd/conf.modules.d/00-mpm.conf && \
     sed -i 's/#LoadModule mpm_event_module/LoadModule mpm_event_module/g' /etc/httpd/conf.modules.d/00-mpm.conf
 
+# Secure HTTPS.
+RUN sed -i 's/SSLProtocol/#SSLProtocol/g' /etc/httpd/conf.d/ssl.conf && \
+    sed -i 's/SSLCipherSuite/#SSLCipherSuite/g' /etc/httpd/conf.d/ssl.conf
+
 # Simple startup script to avoid some issues observed with container restart.
 ADD files/run-httpd.sh /run-httpd.sh
 RUN chmod -v +x /run-httpd.sh
