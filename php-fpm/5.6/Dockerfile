@@ -5,7 +5,7 @@ MAINTAINER Guillaume Kulakowski <guillaume@kulakowski.fr>
 LABEL Description="CentOS PHP-FPM 5.6 from SCL"
 LABEL Vendor="Guillaume Kulakowski"
 LABEL License=MIT
-LABEL Version=5.6-1.1
+LABEL Version=5.6-1.2
 
 # Install RH-PHP56 and more-php56 (by Remi) collections from SCL.
 RUN yum update -y && \
@@ -42,7 +42,6 @@ RUN yum update -y && \
                    more-php56-php-pecl-memcached \
                    more-php56-php-pecl-redis \
                    more-php56-php-pecl-solr2 \
-                   more-php56-php-pecl-sphinx \
                    more-php56-php-twig \
                    more-php56-php-pecl-varnish \
                    more-php56-php-pecl-yaml \
