@@ -5,10 +5,10 @@ MAINTAINER Guillaume Kulakowski <guillaume@kulakowski.fr>
 LABEL Description="CentOS HTTPd 2.4.12 from SCL"
 LABEL Vendor="Guillaume Kulakowski"
 LABEL License=MIT
-LABEL Version=2.4-1.1
+LABEL Version=2.4-1.2
 
 # Install HTTPD24 collection from SCL.
-RUN yum update -y && \
+RUN yum update -y && \ 
     yum install -y centos-release-scl && \
     yum install -y httpd24 \
                    httpd24-httpd-tools \
@@ -20,9 +20,9 @@ RUN ln -s /opt/rh/httpd24/root/etc/httpd/ /etc
 
 # My configuration.
 COPY conf.d /etc/httpd/conf.d
-RUN mkdir /etc/httpd/vhost.d
-RUN mkdir /etc/httpd/ssl
-RUN rm -f /etc/httpd/conf.d/welcome.conf
+RUN mkdir /etc/httpd/vhost.d && \
+    mkdir /etc/httpd/ssl && \
+    rm -f /etc/httpd/conf.d/welcome.conf
 
 # Use MPM event.
 RUN sed -i 's/LoadModule mpm_prefork_module/#LoadModule mpm_prefork_module/g' /etc/httpd/conf.modules.d/00-mpm.conf && \
