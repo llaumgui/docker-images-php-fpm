@@ -1,8 +1,0 @@
-#!/bin/bash
-
-args=
-for arg in "$@"; do
-  args="$args '$arg'"
-done
-
-eval exec php /opt/org/composer/composer.phar $args
