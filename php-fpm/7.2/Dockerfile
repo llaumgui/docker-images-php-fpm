@@ -21,6 +21,8 @@ ARG DOCKER_PHP_ENABLE_POSTGRESQL
 ARG DOCKER_PHP_ENABLE_REDIS
 ARG DOCKER_PHP_ENABLE_SYMFONY
 ARG DOCKER_PHP_ENABLE_XDEBUG
+ARG DOCKER_USER_UID
+ARG DOCKER_USER_GID
 
 RUN	echo -n "With apcu support:          " ; if [[ "${DOCKER_PHP_ENABLE_APCU}" = "on" ]] ; 	     then echo "Yes"; else echo "No" ; fi && \
 	echo -n "With composer support:      " ; if [[ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ]] ; 	 then echo "Yes"; else echo "No" ; fi && \
@@ -31,8 +33,9 @@ RUN	echo -n "With apcu support:          " ; if [[ "${DOCKER_PHP_ENABLE_APCU}" =
 	echo -n "With postgresql support:    " ; if [[ "${DOCKER_PHP_ENABLE_POSTGRESQL}" = "on" ]] ; then echo "Yes"; else echo "No" ; fi && \
 	echo -n "With redis support:         " ; if [[ "${DOCKER_PHP_ENABLE_REDIS}" = "on" ]] ; 	 then echo "Yes"; else echo "No" ; fi && \
 	echo -n "With symfony support:       " ; if [[ "${DOCKER_PHP_ENABLE_SYMFONY}" = "on" ]] ; 	 then echo "Yes"; else echo "No" ; fi && \
-	echo -n "With xdebug support:        " ; if [[ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ]] ; 	 then echo "Yes"; else echo "No" ; fi
-
+    echo -n "With xdebug support:        " ; if [[ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
+    if [ -z ${DOCKER_USER_UID+x} ]; then echo "DOCKER_USER_UID is unset"; DOCKER_USER_UID=1000; else echo "DOCKER_USER_UID is set to '$DOCKER_USER_UID'"; fi && \
+    if [ -z ${DOCKER_USER_GID+x} ]; then echo "DOCKER_USER_GID is unset"; DOCKER_USER_GID=1000; else echo "DOCKER_USER_GID is set to '$DOCKER_USER_GID'"; fi
 
 # --------------------------------------------------------- Install dependancies
 RUN	apk add --update --no-cache \
@@ -77,6 +80,7 @@ RUN php -m && \
     docker-php-ext-install mbstring && \
     docker-php-ext-install opcache && \
     docker-php-ext-install xmlrpc && \
+    docker-php-ext-install zip && \
     php -m
 
 
@@ -227,13 +231,6 @@ RUN if [ "${DOCKER_PHP_ENABLE_COMPOSER}" != "off" ]; then \
     fi
 
 
-# ---------------------------------------------------------Install some binaries
-# Install php-fpm-cli from https://gist.github.com/muhqu/91497df3a110f594b992.
-ADD https://gist.githubusercontent.com/muhqu/91497df3a110f594b992/raw/58bf4ee037b637c24dea2f80a8c6735d5229f4d6/php-fpm-cli /usr/bin/php-fpm-cli
-ADD bin/apcu_clear_cache.sh /usr/bin/apcu_clear_cache
-RUN chmod +x /usr/bin/php-fpm-cli \
-             /usr/bin/apcu_clear_cache
-
 # ---------------------------------------------------------------- Configuration
 # My configuration.
 RUN sed -i "/^;security.limit_extensions =.*/asecurity.limit_extensions = .php .php7 .php72" /usr/local/etc/php-fpm.d/www.conf
@@ -244,6 +241,9 @@ COPY etc /usr/local/etc/php
 RUN apk del .docker-php-global-dependancies && \
 	rm -rf /var/cache/apk/* && \
 	docker-php-source delete
+
+# Add user for php-cli
+RUN adduser -D user --uid $DOCKER_USER_UID --gid $DOCKER_USER_GID
 
 EXPOSE 9000
 WORKDIR /var/www

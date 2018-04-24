@@ -10,8 +10,6 @@ PHP 7.1 image:
  * opcache
  * xmlrpc
 * Additionals binaries:
- * [php-fpm-cli](https://gist.githubusercontent.com/muhqu/91497df3a110f594b992/raw/58bf4ee037b637c24dea2f80a8c6735d5229f4d6/php-fpm-cli).
- * *apcu_clear_cache*: script to purge APCu's cache.
  * ImageMagick
  * GIT
 
@@ -25,6 +23,8 @@ PHP 7.1 image:
  * redis
  * Symfony (currently only yaml)
  * xDebug
+ 
+* Capacity to set UID and GID for php-cli usage
 
 * Capability to disable some binaries (need rebuild and pass build arg):
  * Composer
@@ -76,6 +76,8 @@ You can use this container in a docker-compose.yml file:
         DOCKER_PHP_ENABLE_REDIS: 'off'
         DOCKER_PHP_ENABLE_SYMFONY: 'off'
         DOCKER_PHP_ENABLE_XDEBUG: 'off'
+		DOCKER_USER_UID: 1000
+		DOCKER_USER_GID:1000
     restart: always
     volumes:
      - /etc/localtime:/etc/localtime:ro
