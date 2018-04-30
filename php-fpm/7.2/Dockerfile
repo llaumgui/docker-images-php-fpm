@@ -243,7 +243,8 @@ RUN apk del .docker-php-global-dependancies && \
 	docker-php-source delete
 
 # Add user for php-cli
-RUN adduser -D user --uid $DOCKER_USER_UID --gid $DOCKER_USER_GID
+RUN addgroup -g ${DOCKER_USER_GID} php-cli
+RUN adduser -D -u ${DOCKER_USER_UID} -G php-cli php-cli
 
 EXPOSE 9000
 WORKDIR /var/www
