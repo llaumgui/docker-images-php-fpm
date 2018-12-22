@@ -1,6 +1,7 @@
 # PHP 7.2 (PHP-FPM) on alpine Linux
 
 PHP 7.2 image:
+
 * Forked from [official PHP-FPM build with alpine Linux](https://store.docker.com/images/php) (php:7.2-fpm-alpine).
 * Additionals PHP extensions:
  * bcmath
@@ -33,8 +34,11 @@ PHP 7.2 image:
  * A dedicated php-cli.ini.
 
 ## Usage
+
 ### With docker client
+
 You can run this container with docker client:
+
 ~~~bash
 docker run -d \
   --volumes /etc/localtime:/etc/localtime:ro \
@@ -45,7 +49,9 @@ docker run -d \
 ~~~
 
 ### With compose
+
 You can use this container in a docker-compose.yml file:
+
 ~~~yaml
   php72:
     container_name: php72
@@ -59,11 +65,12 @@ You can use this container in a docker-compose.yml file:
 ~~~
 
 ## Rebuild with less extensions
+
 ~~~yaml
   php72:
     container_name: php:7.2-fpm
     image: llaumgui/php:7.2-fpm
-    build: 
+    build:
       context: ../PATH_TO_DOCKERFILE/
       args:
         DOCKER_PHP_ENABLE_APCU: 'off'
@@ -76,8 +83,8 @@ You can use this container in a docker-compose.yml file:
         DOCKER_PHP_ENABLE_REDIS: 'off'
         DOCKER_PHP_ENABLE_SYMFONY: 'off'
         DOCKER_PHP_ENABLE_XDEBUG: 'off'
-		DOCKER_USER_UID: 1000
-		DOCKER_USER_GID:1000
+        DOCKER_USER_UID: 1000
+        DOCKER_USER_GID:1000
     restart: always
     volumes:
      - /etc/localtime:/etc/localtime:ro
