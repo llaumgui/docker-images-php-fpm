@@ -21,8 +21,8 @@ ARG DOCKER_PHP_ENABLE_POSTGRESQL
 ARG DOCKER_PHP_ENABLE_REDIS
 ARG DOCKER_PHP_ENABLE_SYMFONY
 ARG DOCKER_PHP_ENABLE_XDEBUG
-ARG DOCKER_USER_UID
-ARG DOCKER_USER_GID
+ARG DOCKER_USER_UID=false
+ARG DOCKER_USER_GID=false
 
 RUN echo -n "With apcu support:          " ; if [[ "${DOCKER_PHP_ENABLE_APCU}" = "on" ]] ;        then echo "Yes"; else echo "No" ; fi && \
     echo -n "With composer support:      " ; if [[ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
@@ -265,8 +265,12 @@ RUN apk del .docker-php-global-dependancies && \
     docker-php-source delete
 
 # Add user for php-cli
-RUN addgroup -g ${DOCKER_USER_GID} php-cli && \
-    adduser -D -u ${DOCKER_USER_UID} -G php-cli php-cli
+RUN if [ "${DOCKER_USER_GID}" != "false" ] && [ "${DOCKER_USER_UID}" = "false" ]; then \
+      addgroup -g ${DOCKER_USER_GID} php-cli && \
+      adduser -D -u ${DOCKER_USER_UID} -G php-cli php-cli; \
+    else \
+      echo "No user for php-cli"; \
+    fi
 
 EXPOSE 9000
 WORKDIR /var/www
