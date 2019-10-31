@@ -4,7 +4,7 @@
 FROM php:7.3-fpm-alpine
 MAINTAINER Guillaume Kulakowski <guillaume@kulakowski.fr>
 
-LABEL Description="Fork of php-fpm:7.2"
+LABEL Description="Fork of php-fpm:7.3"
 LABEL Vendor="Guillaume Kulakowski"
 LABEL License="MIT"
 LABEL Version=7.3-fpm
@@ -13,6 +13,8 @@ LABEL Version=7.3-fpm
 # ---------------------------------------------------------- Setup build options
 ARG DOCKER_PHP_ENABLE_APCU
 ARG DOCKER_PHP_ENABLE_COMPOSER
+ARG DOCKER_PHP_ENABLE_EXIF
+ARG DOCKER_PHP_ENABLE_IMAGICK
 ARG DOCKER_PHP_ENABLE_LDAP
 ARG DOCKER_PHP_ENABLE_MEMCACHED
 ARG DOCKER_PHP_ENABLE_MONGODB
@@ -26,6 +28,8 @@ ARG DOCKER_USER_GID=false
 
 RUN echo -n "With apcu support:          " ; if [[ "${DOCKER_PHP_ENABLE_APCU}" = "on" ]] ;        then echo "Yes"; else echo "No" ; fi && \
     echo -n "With composer support:      " ; if [[ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo -n "With exif support:          " ; if [[ "${DOCKER_PHP_ENABLE_EXIF}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
+    echo -n "With imagick support:       " ; if [[ "${DOCKER_PHP_ENABLE_IMAGICK}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
     echo -n "With ldap support:          " ; if [[ "${DOCKER_PHP_ENABLE_LDAP}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
     echo -n "With memcached support:     " ; if [[ "${DOCKER_PHP_ENABLE_MEMCACHED}" = "on" ]] ;  then echo "Yes"; else echo "No" ; fi && \
     echo -n "With mongodb support:       " ; if [[ "${DOCKER_PHP_ENABLE_MONGODB}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
@@ -47,7 +51,6 @@ RUN apk add --update --no-cache \
         libzip \
         # Misc tools \
         git \
-        imagemagick \
         patch
 
 
@@ -107,6 +110,34 @@ RUN php -m && \
 RUN if [ "${DOCKER_PHP_ENABLE_APCU}" != "off" ]; then \
       pecl install apcu && \
       docker-php-ext-enable apcu && \
+      php -m; \
+    else \
+      echo "Skip apcu support"; \
+    fi
+
+# Enable EXIF
+RUN if [ "${DOCKER_PHP_ENABLE_EXIF}" != "off" ]; then \
+      docker-php-ext-install exif && \
+      docker-php-ext-enable exif && \
+      php -m; \
+    else \
+      echo "Skip apcu support"; \
+    fi
+
+    
+# Enable imagick
+RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
+      # Dependancy for imagick \
+      apk add --update --no-cache \
+          imagemagick \
+          imagemagick-libs && \
+
+      # Build dependancy for imagick \
+      apk add --update --no-cache --virtual .docker-php-imagick-dependancies \
+          imagemagick-dev && \
+      pecl install imagick && \
+      docker-php-ext-enable imagick && \
+      apk del .docker-php-imagick-dependancies && \
       php -m; \
     else \
       echo "Skip apcu support"; \
@@ -225,6 +256,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_SYMFONY}" != "off" ]; then \
 RUN if [ "${DOCKER_PHP_ENABLE_XDEBUG}" != "off" ]; then \
       # Build dependancy for XDebug \
       apk add --update --no-cache --virtual .docker-php-xdebug-dependancies \
+          bash \
           git && \
       git clone https://github.com/xdebug/xdebug.git && \
       cd xdebug && \
