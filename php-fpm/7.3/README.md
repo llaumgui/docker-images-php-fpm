@@ -3,34 +3,33 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/llaumgui/php.svg)](https://hub.docker.com/r/llaumgui/php/) [![](https://images.microbadger.com/badges/image/llaumgui/php.svg)](https://microbadger.com/images/llaumgui/php "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/llaumgui/php.svg)](https://microbadger.com/images/llaumgui/php "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/llaumgui/php.svg)](https://microbadger.com/images/llaumgui/php "Get your own commit badge on microbadger.com")  [![](https://img.shields.io/github/last-commit/llaumgui/docker-images.svg)](https://github.com/llaumgui/docker-images)
 
 PHP 7.3 image:
+
 * Forked from [official PHP-FPM build with alpine Linux](https://store.docker.com/images/php) (php:7.3-fpm-alpine).
 * Additionals PHP extensions:
- * bcmath
- * gd
- * intl
- * mbstring
- * opcache
- * xmlrpc
+  * bcmath
+  * gd
+  * intl
+  * mbstring
+  * opcache
+  * xmlrpc
 * Additionals binaries:
- * ImageMagick
- * GIT
-
+  * GIT
 * Capability to disable some additionals extensions (need rebuild and pass build arg):
- * APCu
- * ldap
- * memcached
- * mongodb
- * mysql
- * postgresql
- * redis
- * Symfony (currently only yaml)
- * xDebug
- 
+  * APCu
+  * exif
+  * imagick
+  * ldap
+  * memcached
+  * mongodb
+  * mysql
+  * postgresql
+  * redis
+  * Symfony (currently only yaml)
+  * xDebug
 * Capacity to set UID and GID for php-cli usage
-
 * Capability to disable some binaries (need rebuild and pass build arg):
- * Composer
-
+  * Composer
+  * ImageMagick (with optionnal imagick support)
 * Some configuration:
  * A dedicated php-cli.ini.
 
@@ -76,6 +75,8 @@ You can use this container in a docker-compose.yml file:
       args:
         DOCKER_PHP_ENABLE_APCU: 'off'
         DOCKER_PHP_ENABLE_COMPOSER: 'off'
+        DOCKER_PHP_ENABLE_EXIF: 'off'
+        DOCKER_PHP_ENABLE_IMAGICK: 'off'
         DOCKER_PHP_ENABLE_LDAP: 'off'
         DOCKER_PHP_ENABLE_MEMCACHED: 'off'
         DOCKER_PHP_ENABLE_MONGODB: 'off'
