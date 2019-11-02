@@ -306,7 +306,7 @@ RUN apk del .docker-php-global-dependancies && \
     docker-php-source delete
 
 # Add user for php-cli
-RUN if [ "${DOCKER_USER_GID}" != "false" ] && [ "${DOCKER_USER_UID}" = "false" ]; then \
+RUN if [ "${DOCKER_USER_GID}" != "false" ] && [ "${DOCKER_USER_UID}" != "false" ]; then \
       addgroup -g ${DOCKER_USER_GID} php-cli && \
       adduser -D -u ${DOCKER_USER_UID} -G php-cli php-cli; \
     else \
