@@ -1,8 +1,8 @@
-# Alpine HTTPd 2.4
+# Alpine Apache HTTPd 2.4
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/llaumgui/httpd24.svg)](https://hub.docker.com/r/llaumgui/httpd24/) [![](https://images.microbadger.com/badges/image/llaumgui/httpd24.svg)](https://microbadger.com/images/llaumgui/httpd24 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/llaumgui/httpd24.svg)](https://microbadger.com/images/llaumgui/httpd24 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/llaumgui/httpd24.svg)](https://microbadger.com/images/llaumgui/httpd24 "Get your own commit badge on microbadger.com")  [![](https://img.shields.io/github/last-commit/llaumgui/docker-images.svg)](https://github.com/llaumgui/docker-images)
+[![Docker Pulls](https://img.shields.io/docker/pulls/llaumgui/httpd.svg)](https://hub.docker.com/r/llaumgui/httpd/) [![](https://images.microbadger.com/badges/image/llaumgui/httpd.svg)](https://microbadger.com/images/llaumgui/httpd "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/llaumgui/httpd.svg)](https://microbadger.com/images/llaumgui/httpd "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/llaumgui/httpd.svg)](https://microbadger.com/images/llaumgui/httpd "Get your own commit badge on microbadger.com")  [![](https://img.shields.io/github/last-commit/llaumgui/docker-images.svg)](https://github.com/llaumgui/docker-images)
 
-An Apache 2.4 image forked from offical [repository](https://store.docker.com/images/httpd).
+An Apache HTTPd 2.4 image forked from offical [repository](https://store.docker.com/images/httpd).
 
 With configuration:
 * [Deflate](https://github.com/llaumgui/docker-images/tree/master/httpd/2.4/conf.d/deflate.conf).
