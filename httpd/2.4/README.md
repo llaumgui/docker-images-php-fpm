@@ -13,7 +13,7 @@ With configuration:
 * You can put your vhost in _/usr/local/apache2/conf/vhost.d_ (This directory can be shared with the host).
 
 Work also with
-* [PHP-FPM](https://github.com/llaumgui/docker-images/tree/master/httpd/2.4/conf.d/php.conf) handler toward */var/run/php-fpm.sock* and *php* hostname.
+* [PHP-FPM](https://github.com/llaumgui/docker-images/tree/master/httpd/2.4/conf.d/php.conf) handler toward */var/run/php-docker/php-fpm.sock* and *php* hostname.
 
 ## Usage
 ### With docker client
@@ -24,7 +24,7 @@ docker run -d \
   --volumes /docker/volumes/www:/var/www \
   --volumes /docker/volumes/httpd24/conf/vhost.d:/usr/local/apache2/conf/vhost.d:ro \
   --volumes /docker/volumes/httpd24/conf/ssl://usr/local/apache2/conf/ssl:ro \
-  --volumes /var/run/php7.4-fpm.sock:/var/run/php-fpm.sock \
+  --volumes /var/run/php7.4-docker:/var/run/php-docker \
   -p 80:80 \
   -p 443:443 \
   llaumgui/httpd24
@@ -42,7 +42,7 @@ You can use this container in a docker-compose.yml file:
      - /docker/volumes/www:/var/www/
      - /docker/volumes/httpd24/conf/vhost.d:/usr/local/apache2/conf/vhost.d:ro
      - /docker/volumes/httpd24/conf/ssl:/usr/local/apache2/conf/ssl:ro
-     - /var/run/php7.4-fpm.sock:/var/run/php-fpm.sock
+     - /var/run/php7.4-docker:/var/run/php-docker
     ports:
      - "80:80"
      - "443:443"
