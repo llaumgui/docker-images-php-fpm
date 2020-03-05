@@ -45,7 +45,6 @@ You can run this container with docker client:
 docker run -d \
   --volumes /etc/localtime:/etc/localtime:ro \
   --volumes /docker/volumes/www:/var/www \
-  --volumes /docker/volumes/php56/log:/var/log/php-fpm \
   --expose 9000 \
   llaumgui/php:7.2-fpm
 ~~~
