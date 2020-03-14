@@ -32,7 +32,6 @@ PHP 7.4 image:
   * ImageMagick (with optionnal imagick support)
 * Some configuration:
  * A dedicated php-cli.ini.
- * __Doesn't expose port !!! Use a volume to share socket for better compatibility with several container and network in host mode.__
 
 ## Usage
 
@@ -44,7 +43,7 @@ You can run this container with docker client:
 docker run -d \
   --volumes /etc/localtime:/etc/localtime:ro \
   --volumes /docker/volumes/www:/var/www \
-  --volumes - /var/run/php7.4-docker:/var/run/php7.4-docker \
+  --expose 9000 \
   llaumgui/php:7.4-fpm
 ~~~
 
@@ -60,7 +59,8 @@ You can use this container in a docker-compose.yml file:
     volumes:
      - /etc/localtime:/etc/localtime:ro
      - /var/www:/var/www
-     - /var/run/php7.4-docker:/var/run/php7.4-docker
+    expose:
+     - 9000
 ~~~
 
 ## Rebuild with less extensions
@@ -90,5 +90,6 @@ You can use this container in a docker-compose.yml file:
     volumes:
      - /etc/localtime:/etc/localtime:ro
      - /var/www:/var/www
-     - - /var/run/php7.4-docker:/var/run/php7.4-docker
+    expose:
+     - 9000
 ~~~
