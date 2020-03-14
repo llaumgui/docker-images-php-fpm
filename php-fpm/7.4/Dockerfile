@@ -295,8 +295,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_COMPOSER}" != "off" ]; then \
 
 # ---------------------------------------------------------------- Configuration
 # My configuration.
-RUN sed -i "/^;security.limit_extensions =.*/asecurity.limit_extensions = .php .php7 .php74" /usr/local/etc/php-fpm.d/www.conf && \
-    sed -i "s@^listen = 127.0.0.1:9000@listen = /var/run/php-docker/php-fpm.sock@g" /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i "s/^;security.limit_extensions =.*/security.limit_extensions = .php .php7 .php74/g" /usr/local/etc/php-fpm.d/www.conf
 COPY php.d /usr/local/etc/php/conf.d
 COPY etc /usr/local/etc/php
 
@@ -313,6 +312,5 @@ RUN if [ "${DOCKER_USER_GID}" != "false" ] && [ "${DOCKER_USER_UID}" != "false" 
       echo "No user for php-cli"; \
     fi
 
-VOLUME ["/var/www", "/var/run/php-docker"]
-
+EXPOSE 9000
 WORKDIR /var/www
