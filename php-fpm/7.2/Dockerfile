@@ -255,7 +255,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_COMPOSER}" != "off" ]; then \
 
 # ---------------------------------------------------------------- Configuration
 # My configuration.
-RUN sed -i "/^;security.limit_extensions =.*/asecurity.limit_extensions = .php .php7 .php72" /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i "s/^;security.limit_extensions =.*/security.limit_extensions = .php .php7 .php72/g" /usr/local/etc/php-fpm.d/www.conf
 COPY php.d /usr/local/etc/php/conf.d
 COPY etc /usr/local/etc/php
 
