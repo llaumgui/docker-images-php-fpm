@@ -8,6 +8,7 @@ PHP 7.4 image:
 * Additionals PHP extensions:
   * bcmath
   * gd
+  * gmp
   * intl
   * mbstring
   * opcache
@@ -26,7 +27,6 @@ PHP 7.4 image:
   * redis
   * Symfony (currently only yaml)
   * xDebug
-* Capacity to set UID and GID for php-cli usage
 * Capability to disable some binaries (need rebuild and pass build arg):
   * Composer
   * ImageMagick (with optionnal imagick support)
@@ -84,8 +84,6 @@ You can use this container in a docker-compose.yml file:
         DOCKER_PHP_ENABLE_REDIS: 'off'
         DOCKER_PHP_ENABLE_SYMFONY: 'off'
         DOCKER_PHP_ENABLE_XDEBUG: 'off'
-        DOCKER_USER_UID: 1000
-        DOCKER_USER_GID:1000
     restart: always
     volumes:
      - /etc/localtime:/etc/localtime:ro
