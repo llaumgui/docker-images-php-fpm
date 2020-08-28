@@ -23,8 +23,6 @@ ARG DOCKER_PHP_ENABLE_POSTGRESQL
 ARG DOCKER_PHP_ENABLE_REDIS
 ARG DOCKER_PHP_ENABLE_SYMFONY
 ARG DOCKER_PHP_ENABLE_XDEBUG
-ARG DOCKER_USER_UID=false
-ARG DOCKER_USER_GID=false
 
 RUN echo -n "With apcu support:          " ; if [[ "${DOCKER_PHP_ENABLE_APCU}" = "on" ]] ;        then echo "Yes"; else echo "No" ; fi && \
     echo -n "With composer support:      " ; if [[ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
@@ -37,9 +35,7 @@ RUN echo -n "With apcu support:          " ; if [[ "${DOCKER_PHP_ENABLE_APCU}" =
     echo -n "With postgresql support:    " ; if [[ "${DOCKER_PHP_ENABLE_POSTGRESQL}" = "on" ]] ; then echo "Yes"; else echo "No" ; fi && \
     echo -n "With redis support:         " ; if [[ "${DOCKER_PHP_ENABLE_REDIS}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
     echo -n "With symfony support:       " ; if [[ "${DOCKER_PHP_ENABLE_SYMFONY}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With xdebug support:        " ; if [[ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
-    if [ -z ${DOCKER_USER_UID+x} ]; then echo "DOCKER_USER_UID is unset"; DOCKER_USER_UID=1000; else echo "DOCKER_USER_UID is set to '$DOCKER_USER_UID'"; fi && \
-    if [ -z ${DOCKER_USER_GID+x} ]; then echo "DOCKER_USER_GID is unset"; DOCKER_USER_GID=1000; else echo "DOCKER_USER_GID is set to '$DOCKER_USER_GID'"; fi
+    echo -n "With xdebug support:        " ; if [[ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi
 
 
 # --------------------------------------------------------- Install dependancies
@@ -62,6 +58,8 @@ RUN apk add --update --no-cache --virtual .docker-php-global-dependancies \
         libpng-dev \
         # Build dependency for gettext \
         gettext-dev \
+        # Build dependency for gmp \
+        gmp-dev \
         # Build dependency for intl \
         icu-dev \
         # Build dependency for mbstring \
@@ -86,6 +84,7 @@ RUN php -m && \
     docker-php-ext-configure bcmath --enable-bcmath && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-configure gettext && \
+    docker-php-ext-configure gmp && \
     docker-php-ext-configure intl --enable-intl && \
     docker-php-ext-configure mbstring --enable-mbstring && \
     docker-php-ext-configure opcache --enable-opcache && \
@@ -95,6 +94,7 @@ RUN php -m && \
     docker-php-ext-install bcmath \
         gd \
         gettext \
+        gmp \
         intl \
         mbstring \
         opcache \
@@ -303,14 +303,6 @@ COPY etc /usr/local/etc/php
 RUN apk del .docker-php-global-dependancies && \
     rm -rf /var/cache/apk/* && \
     docker-php-source delete
-
-# Add user for php-cli
-RUN if [ "${DOCKER_USER_GID}" != "false" ] && [ "${DOCKER_USER_UID}" != "false" ]; then \
-      addgroup -g ${DOCKER_USER_GID} php-cli && \
-      adduser -D -u ${DOCKER_USER_UID} -G php-cli php-cli; \
-    else \
-      echo "No user for php-cli"; \
-    fi
 
 EXPOSE 9000
 WORKDIR /var/www
