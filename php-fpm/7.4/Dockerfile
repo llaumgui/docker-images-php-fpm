@@ -46,6 +46,7 @@ RUN apk add --update --no-cache \
         # Dependancy for zip \
         libzip \
         # Misc tools \
+        aria2 \
         git \
         patch
 
