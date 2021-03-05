@@ -40,6 +40,10 @@ RUN echo -n "With apcu support:          " ; if [[ "${DOCKER_PHP_ENABLE_APCU}" =
 
 # --------------------------------------------------------- Install dependancies
 RUN apk add --update --no-cache \
+        # Dependencies for gd \
+        freetype-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
         # Dependancy for intl \
         icu-libs \
         libintl \
@@ -52,10 +56,6 @@ RUN apk add --update --no-cache \
 
 # --------------------------------------------------- Install build dependancies
 RUN apk add --update --no-cache --virtual .docker-php-global-dependancies \
-        # Build dependencies for gd \
-        freetype-dev \
-        libjpeg-turbo-dev \
-        libpng-dev \
         # Build dependency for gettext \
         gettext-dev \
         # Build dependency for gmp \
@@ -82,7 +82,7 @@ RUN apk add --update --no-cache --virtual .docker-php-global-dependancies \
 # ------------------------------------------------------- Install php extensions
 RUN php -m && \
     docker-php-ext-configure bcmath --enable-bcmath && \
-    docker-php-ext-configure gd --with-freetype --with-jpeg && \
+    docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg && \
     docker-php-ext-configure gettext && \
     docker-php-ext-configure gmp && \
     docker-php-ext-configure intl --enable-intl && \
@@ -128,9 +128,9 @@ RUN if [ "${DOCKER_PHP_ENABLE_EXIF}" != "off" ]; then \
 # No php 8 support currently: https://github.com/Imagick/imagick/issues/358
 RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
       # Dependancy for imagick \
-#      apk add --update --no-cache \
-#          imagemagick \
-#          imagemagick-libs && \
+      apk add --update --no-cache \
+          imagemagick \
+          imagemagick-libs && \
 
       # Build dependancy for imagick \
 #      apk add --update --no-cache --virtual .docker-php-imagick-dependancies \
