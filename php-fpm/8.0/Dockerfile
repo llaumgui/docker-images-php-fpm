@@ -50,6 +50,7 @@ RUN apk add --update --no-cache \
         # Dependancy for zip \
         libzip \
         # Misc tools \
+        fcgi \
         git \
         patch
 
@@ -102,6 +103,12 @@ RUN php -m && \
         soap \
         zip && \
     php -m
+
+
+# -------------------------------------------------- Install php-fpm-healthcheck
+RUN sed -i 's#^;pm.status_path = .*#pm.status_path = /status#g' /usr/local/etc/php-fpm.d/www.conf && \
+    wget -O /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck && \
+    chmod +x /usr/local/bin/php-fpm-healthcheck
 
 
 # --------------------------------------------------- Conditionnal installations
