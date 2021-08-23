@@ -131,17 +131,11 @@ RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
       apk add --update --no-cache \
           imagemagick \
           imagemagick-libs && \
-
       # Build dependancy for imagick \
       apk add --update --no-cache --virtual .docker-php-imagick-dependancies \
           imagemagick-dev && \
-#      printf "\n" | pecl install imagick && \
-
-      git clone https://github.com/Imagick/imagick && \
-      cd imagick && \
-      mkdir -p /usr/src/php/ext/imagick && \
-      curl -fsSL https://github.com/Imagick/imagick/archive/06116aa24b76edaf6b1693198f79e6c295eda8a9.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1 && \
-      docker-php-ext-install imagick && \
+      printf "\n" | pecl install imagick && \
+      docker-php-ext-enable imagick && \
       apk del .docker-php-imagick-dependancies && \
       php -m; \
     else \
