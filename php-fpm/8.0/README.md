@@ -15,6 +15,7 @@ PHP 8.0 image:
   * xmlrpc
 * Additionals binaries:
   * GIT
+  * [php-fpm-healthcheck](https://github.com/renatomefi/php-fpm-healthcheck)
 * Capability to disable some additionals extensions (need rebuild and pass build arg):
   * APCu
   * exif
