@@ -105,3 +105,4 @@ You can use this container in a docker-compose.yml file:
 [ico-ghactions]: https://img.shields.io/github/workflow/status/llaumgui/docker-image-php-fpm/docker-image?style=flat-square&logo=github&label=CI/CD
 [link-ghactions]: https://github.com/llaumgui/docker-image-php-fpm/actions
 [ico-version]: https://img.shields.io/docker/v/llaumgui/php?sort=semver&color=%2496ed&logo=docker&style=flat-square
+[ico-license]: https://img.shields.io/github/license/llaumgui/docker-image-php-fpm?style=flat-square
