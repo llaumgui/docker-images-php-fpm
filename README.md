@@ -5,7 +5,7 @@
 [![Software License][ico-license]](LICENSE)
 
 
-# php-FRPM Docker images
+# php-FPM Docker images
 
 Repository with my php-fpm's Dockerfile for my Docker/Podman images.
 
