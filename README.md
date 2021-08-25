@@ -1,7 +1,7 @@
 [![Author][ico-twitter]][link-twitter]
 [![Build Status][ico-ghactions]][link-ghactions]
 [![Docker Pull][ico-docker]][link-docker]
-[![Latest Version][ico-version]][link-packagist]
+[![Latest Version][ico-version]][link-docker]
 [![Software License][ico-license]](LICENSE)
 
 
@@ -16,5 +16,4 @@ Repository with my docker files for my [Docker images hosted on Docker hub](http
 [ico-ghactions]: https://img.shields.io/github/workflow/status/llaumgui/docker-image-php-fpm/docker-image?style=flat-square&logo=github&label=CI/CD
 [link-ghactions]: https://github.com/llaumgui/docker-image-php-fpm/actions
 [ico-version]: https://img.shields.io/docker/v/llaumgui/php?sort=semver&color=%2496ed&logo=docker&style=flat-square
-[link-packagist]: https://hub.docker.com/repository/docker/llaumgui/php
 [ico-license]: https://img.shields.io/github/license/llaumgui/docker-image-php-fpm?style=flat-square
