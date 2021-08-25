@@ -4,10 +4,11 @@
 FROM php:8.0-fpm-alpine
 MAINTAINER Guillaume Kulakowski <guillaume@kulakowski.fr>
 
-LABEL Description="Fork of php-fpm:8.0"
-LABEL Vendor="Guillaume Kulakowski"
-LABEL License="MIT"
-LABEL Version=8.0-fpm
+LABEL org.opencontainers.image.title="llaumgui/php-fpm"
+LABEL org.opencontainers.image.description="Fork of php-fpm:8.0"
+LABEL org.opencontainers.image.vendor="Guillaume Kulakowski"
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.version="8.0"
 
 
 # ---------------------------------------------------------- Setup build options
