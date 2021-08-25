@@ -17,6 +17,14 @@ docker pull llaumgui/php
 
 And see [documentation](https://github.com/llaumgui/docker-image-php-fpm/tree/main/8.0).
 
+## Usage from GitHub Packages
+
+```
+docker pull ghcr.io/llaumgui/php-fpm:latest
+```
+
+And see [documentation](https://github.com/llaumgui/docker-image-php-fpm/tree/main/8.0).
+
 [ico-twitter]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=50ABF1&logo=twitter&style=flat-square
 [link-twitter]: https://twitter.com/llaumgui
 [ico-docker]: https://img.shields.io/docker/pulls/llaumgui/php?color=%2496ed&logo=docker&style=flat-square
