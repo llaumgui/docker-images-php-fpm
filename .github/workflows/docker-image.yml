@@ -27,7 +27,11 @@ jobs:
       matrix:
         #php-version: [7.3, 7.4, "8.0"]
         php-version: ["8.0"]
-
+  
+    defaults:
+      run:
+        working-directory: ${{ matrix.php-version }}
+        
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
@@ -49,11 +53,6 @@ jobs:
     - name: Extract Docker metadata
       id: meta
       uses: docker/metadata-action@v3
-      with:
-        context: ${{ matrix.php-version }}
-
-    - name: Build the Docker image
-      run: docker build ${{ matrix.php-version }} --tag ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}
 
     # Build and push Docker image with Buildx (don't push on PR)
     # https://github.com/docker/build-push-action
