@@ -1,6 +1,10 @@
 # PHP 7.4 (PHP-FPM) on alpine Linux
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/llaumgui/php.svg)](https://hub.docker.com/r/llaumgui/php/) [![](https://images.microbadger.com/badges/image/llaumgui/php.svg)](https://microbadger.com/images/llaumgui/php "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/llaumgui/php.svg)](https://microbadger.com/images/llaumgui/php "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/llaumgui/php.svg)](https://microbadger.com/images/llaumgui/php "Get your own commit badge on microbadger.com")  [![](https://img.shields.io/github/last-commit/llaumgui/docker-images.svg)](https://github.com/llaumgui/docker-images)
+[![Author][ico-twitter]][link-twitter]
+[![Build Status][ico-ghactions]][link-ghactions]
+[![Docker Pull][ico-docker]][link-docker]
+[![Latest Version][ico-version]][link-docker]
+[![Software License][ico-license]](LICENSE)
 
 PHP 7.4 image:
 
@@ -91,3 +95,12 @@ You can use this container in a docker-compose.yml file:
     expose:
      - 9000
 ~~~
+
+[ico-twitter]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=50ABF1&logo=twitter&style=flat-square
+[link-twitter]: https://twitter.com/llaumgui
+[ico-docker]: https://img.shields.io/docker/pulls/llaumgui/php?color=%2496ed&logo=docker&style=flat-square
+[link-docker]: https://hub.docker.com/repository/docker/llaumgui/php
+[ico-ghactions]: https://img.shields.io/github/workflow/status/llaumgui/docker-image-php-fpm/docker-image?style=flat-square&logo=github&label=CI/CD
+[link-ghactions]: https://github.com/llaumgui/docker-image-php-fpm/actions
+[ico-version]: https://img.shields.io/docker/v/llaumgui/php?sort=semver&color=%2496ed&logo=docker&style=flat-square
+[ico-license]: https://img.shields.io/github/license/llaumgui/docker-image-php-fpm?style=flat-square
