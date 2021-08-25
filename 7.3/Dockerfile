@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.description="Fork of php-fpm:8.0"
 LABEL org.opencontainers.image.vendor="Guillaume Kulakowski"
 LABEL org.opencontainers.image.authors="guillaume@kulakowski.fr"
 LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.version="8.0"
+LABEL org.opencontainers.image.version="7.3"
 
 
 # ---------------------------------------------------------- Setup build options
