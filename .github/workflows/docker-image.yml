@@ -11,6 +11,7 @@ env:
   # Use docker.io for Docker Hub if empty
   GHCR_REGISTRY: ghcr.io
   IMAGE_NAME: llaumgui/php-fpm
+  LATEST: '8.0'
 
 jobs:
 
@@ -62,10 +63,26 @@ jobs:
     # Build and push Docker image with Buildx (don't push on PR)
     # https://github.com/docker/build-push-action
     - name: Build and push Docker image
+      if: matrix.php-version == ${{ env.LATEST }}
       uses: docker/build-push-action@v2
       with:
         context: ${{ matrix.php-version }}
         push: ${{ github.event_name != 'pull_request' }}
-        #tags: ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}
-        tags: ${{ steps.meta.outputs.tags }}
+        tags: |
+          ${{ github.actor }}/php:${{ matrix.php-version }}
+          ${{ github.actor }}/php:latest
+          ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php-version }}
+          ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        #tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+    - name: Build and push Docker image
+      if: matrix.php-version != ${{ env.LATEST }}
+      uses: docker/build-push-action@v2
+      with:
+        context: ${{ matrix.php-version }}
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: |
+          ${{ github.actor }}/php:${{ matrix.php-version }}
+          ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php-version }}
+        #tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
