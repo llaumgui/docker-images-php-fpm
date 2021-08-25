@@ -4,7 +4,7 @@
 FROM php:7.3-fpm-alpine
 
 LABEL org.opencontainers.image.title="llaumgui/php-fpm"
-LABEL org.opencontainers.image.description="Fork of php-fpm:8.0"
+LABEL org.opencontainers.image.description="Fork of php-fpm:7.3"
 LABEL org.opencontainers.image.vendor="Guillaume Kulakowski"
 LABEL org.opencontainers.image.authors="guillaume@kulakowski.fr"
 LABEL org.opencontainers.image.licenses="MIT"
@@ -125,7 +125,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_EXIF}" != "off" ]; then \
       echo "Skip apcu support"; \
     fi
 
-    
+
 # Enable imagick
 RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
       # Dependancy for imagick \
