@@ -2,12 +2,13 @@
 # official PHP docker repository.
 # @see: https://store.docker.com/images/php
 FROM php:7.4-fpm-alpine
-MAINTAINER Guillaume Kulakowski <guillaume@kulakowski.fr>
 
-LABEL Description="Fork of php-fpm:7.4"
-LABEL Vendor="Guillaume Kulakowski"
-LABEL License="MIT"
-LABEL Version=7.4-fpm
+LABEL org.opencontainers.image.title="llaumgui/php-fpm"
+LABEL org.opencontainers.image.description="Fork of php-fpm:8.0"
+LABEL org.opencontainers.image.vendor="Guillaume Kulakowski"
+LABEL org.opencontainers.image.authors="guillaume@kulakowski.fr"
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.version="7.4"
 
 
 # ---------------------------------------------------------- Setup build options
