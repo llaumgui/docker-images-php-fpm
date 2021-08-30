@@ -36,7 +36,7 @@ PHP 8.0 image:
   * Composer
   * ImageMagick (with optionnal imagick support)
 * Some configuration:
- * A dedicated php-cli.ini.
+  * A dedicated php-cli.ini.
 
 ## Usage
 
@@ -101,7 +101,7 @@ You can use this container in a docker-compose.yml file:
 [link-twitter]: https://twitter.com/llaumgui
 [ico-docker]: https://img.shields.io/docker/pulls/llaumgui/php?color=%2496ed&logo=docker&style=flat-square
 [link-docker]: https://hub.docker.com/r/llaumgui/php
-[ico-ghactions]: https://img.shields.io/github/workflow/status/llaumgui/docker-images-php-fpm/Docker%20Image%20CI?style=flat-square&logo=github&label=CI/CD
+[ico-ghactions]: https://img.shields.io/github/workflow/status/llaumgui/docker-images-php-fpm/Docker%20image%20CI%20CD?style=flat-square&logo=github&label=CI/CD
 [link-ghactions]: https://github.com/llaumgui/docker-images-php-fpm/actions
 [ico-version]: https://img.shields.io/docker/v/llaumgui/php?sort=semver&color=%2496ed&logo=docker&style=flat-square
 [ico-license]: https://img.shields.io/github/license/llaumgui/docker-images-php-fpm?style=flat-square

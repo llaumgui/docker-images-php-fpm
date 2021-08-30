@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker image CI CD
 
 on:
   schedule:
@@ -17,9 +17,52 @@ env:
 jobs:
 
   ##############################################################################
+  # Dockerfile tests job
+  #
+  test_dockerfiles:
+    runs-on: ubuntu-latest
+    name: QA for Dockerfile
+
+    strategy:
+      fail-fast: false
+      matrix:
+        httpd-version: [7.3, 7.4, "8.0"]
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+
+  ##############################################################################
+  # markdownlint tests job
+  #
+  test_markdownlint:
+    runs-on: ubuntu-latest
+    name: QA for Markdown files
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: markdownlint-cli
+      uses: nosborn/github-action-markdown-cli@v2.0.0
+      with:
+        files: "*.md */*.md"
+        config_file: ".markdownlint.yaml"
+
+
+  ##############################################################################
   # Build job
   #
-  build:
+  build_deploy:
+    needs: [
+      test_dockerfiles,
+      test_markdownlint
+    ]
     runs-on: ubuntu-latest
     name: Build docker image
 
@@ -48,7 +91,7 @@ jobs:
       with:
         registry: ${{ env.GHCR_REGISTRY }}
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}    
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     # Extract metadata (tags, labels) for Docker
     # https://github.com/docker/metadata-action

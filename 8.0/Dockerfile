@@ -25,18 +25,18 @@ ARG DOCKER_PHP_ENABLE_REDIS="on"
 ARG DOCKER_PHP_ENABLE_SYMFONY="on"
 ARG DOCKER_PHP_ENABLE_XDEBUG="off"
 
-RUN echo -n "With apcu support:          " ; if [[ "${DOCKER_PHP_ENABLE_APCU}" = "on" ]] ;        then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With composer support:      " ; if [[ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With exif support:          " ; if [[ "${DOCKER_PHP_ENABLE_EXIF}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With imagick support:       " ; if [[ "${DOCKER_PHP_ENABLE_IMAGICK}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With ldap support:          " ; if [[ "${DOCKER_PHP_ENABLE_LDAP}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With memcached support:     " ; if [[ "${DOCKER_PHP_ENABLE_MEMCACHED}" = "on" ]] ;  then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With mongodb support:       " ; if [[ "${DOCKER_PHP_ENABLE_MONGODB}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With mysql support:         " ; if [[ "${DOCKER_PHP_ENABLE_MYSQL}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With postgresql support:    " ; if [[ "${DOCKER_PHP_ENABLE_POSTGRESQL}" = "on" ]] ; then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With redis support:         " ; if [[ "${DOCKER_PHP_ENABLE_REDIS}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With symfony support:       " ; if [[ "${DOCKER_PHP_ENABLE_SYMFONY}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With xdebug support:        " ; if [[ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi
+RUN echo "With apcu support:          " ; if [ "${DOCKER_PHP_ENABLE_APCU}" = "on" ] ;        then echo "Yes"; else echo "No" ; fi && \
+    echo "With composer support:      " ; if [ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With exif support:          " ; if [ "${DOCKER_PHP_ENABLE_EXIF}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
+    echo "With imagick support:       " ; if [ "${DOCKER_PHP_ENABLE_IMAGICK}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
+    echo "With ldap support:          " ; if [ "${DOCKER_PHP_ENABLE_LDAP}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
+    echo "With memcached support:     " ; if [ "${DOCKER_PHP_ENABLE_MEMCACHED}" = "on" ] ;  then echo "Yes"; else echo "No" ; fi && \
+    echo "With mongodb support:       " ; if [ "${DOCKER_PHP_ENABLE_MONGODB}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With mysql support:         " ; if [ "${DOCKER_PHP_ENABLE_MYSQL}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With postgresql support:    " ; if [ "${DOCKER_PHP_ENABLE_POSTGRESQL}" = "on" ] ; then echo "Yes"; else echo "No" ; fi && \
+    echo "With redis support:         " ; if [ "${DOCKER_PHP_ENABLE_REDIS}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With symfony support:       " ; if [ "${DOCKER_PHP_ENABLE_SYMFONY}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With xdebug support:        " ; if [ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi
 
 
 # --------------------------------------------------------- Install dependancies
@@ -131,9 +131,8 @@ RUN if [ "${DOCKER_PHP_ENABLE_EXIF}" != "off" ]; then \
       echo "Skip apcu support"; \
     fi
 
-    
+
 # Enable imagick
-# No php 8 support currently: https://github.com/Imagick/imagick/issues/358
 RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
       # Dependancy for imagick \
       apk add --update --no-cache \

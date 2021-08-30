@@ -12,52 +12,52 @@ LABEL org.opencontainers.image.version="7.4"
 
 
 # ---------------------------------------------------------- Setup build options
-ARG DOCKER_PHP_ENABLE_APCU
-ARG DOCKER_PHP_ENABLE_COMPOSER
-ARG DOCKER_PHP_ENABLE_EXIF
-ARG DOCKER_PHP_ENABLE_IMAGICK
-ARG DOCKER_PHP_ENABLE_LDAP
-ARG DOCKER_PHP_ENABLE_MEMCACHED
-ARG DOCKER_PHP_ENABLE_MONGODB
-ARG DOCKER_PHP_ENABLE_MYSQL
-ARG DOCKER_PHP_ENABLE_POSTGRESQL
-ARG DOCKER_PHP_ENABLE_REDIS
-ARG DOCKER_PHP_ENABLE_SYMFONY
-ARG DOCKER_PHP_ENABLE_XDEBUG
+ARG DOCKER_PHP_ENABLE_APCU="on"
+ARG DOCKER_PHP_ENABLE_COMPOSER="on"
+ARG DOCKER_PHP_ENABLE_EXIF="on"
+ARG DOCKER_PHP_ENABLE_IMAGICK="on"
+ARG DOCKER_PHP_ENABLE_LDAP="on"
+ARG DOCKER_PHP_ENABLE_MEMCACHED="on"
+ARG DOCKER_PHP_ENABLE_MONGODB="on"
+ARG DOCKER_PHP_ENABLE_MYSQL="on"
+ARG DOCKER_PHP_ENABLE_POSTGRESQL="on"
+ARG DOCKER_PHP_ENABLE_REDIS="on"
+ARG DOCKER_PHP_ENABLE_SYMFONY="on"
+ARG DOCKER_PHP_ENABLE_XDEBUG="off"
 
-RUN echo -n "With apcu support:          " ; if [[ "${DOCKER_PHP_ENABLE_APCU}" = "on" ]] ;        then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With composer support:      " ; if [[ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With exif support:          " ; if [[ "${DOCKER_PHP_ENABLE_EXIF}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With imagick support:       " ; if [[ "${DOCKER_PHP_ENABLE_IMAGICK}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With ldap support:          " ; if [[ "${DOCKER_PHP_ENABLE_LDAP}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With memcached support:     " ; if [[ "${DOCKER_PHP_ENABLE_MEMCACHED}" = "on" ]] ;  then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With mongodb support:       " ; if [[ "${DOCKER_PHP_ENABLE_MONGODB}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With mysql support:         " ; if [[ "${DOCKER_PHP_ENABLE_MYSQL}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With postgresql support:    " ; if [[ "${DOCKER_PHP_ENABLE_POSTGRESQL}" = "on" ]] ; then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With redis support:         " ; if [[ "${DOCKER_PHP_ENABLE_REDIS}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With symfony support:       " ; if [[ "${DOCKER_PHP_ENABLE_SYMFONY}" = "on" ]] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo -n "With xdebug support:        " ; if [[ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ]] ;      then echo "Yes"; else echo "No" ; fi
+RUN echo "With apcu support:          " ; if [ "${DOCKER_PHP_ENABLE_APCU}" = "on" ] ;        then echo "Yes"; else echo "No" ; fi && \
+    echo "With composer support:      " ; if [ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With exif support:          " ; if [ "${DOCKER_PHP_ENABLE_EXIF}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
+    echo "With imagick support:       " ; if [ "${DOCKER_PHP_ENABLE_IMAGICK}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
+    echo "With ldap support:          " ; if [ "${DOCKER_PHP_ENABLE_LDAP}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
+    echo "With memcached support:     " ; if [ "${DOCKER_PHP_ENABLE_MEMCACHED}" = "on" ] ;  then echo "Yes"; else echo "No" ; fi && \
+    echo "With mongodb support:       " ; if [ "${DOCKER_PHP_ENABLE_MONGODB}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With mysql support:         " ; if [ "${DOCKER_PHP_ENABLE_MYSQL}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With postgresql support:    " ; if [ "${DOCKER_PHP_ENABLE_POSTGRESQL}" = "on" ] ; then echo "Yes"; else echo "No" ; fi && \
+    echo "With redis support:         " ; if [ "${DOCKER_PHP_ENABLE_REDIS}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With symfony support:       " ; if [ "${DOCKER_PHP_ENABLE_SYMFONY}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With xdebug support:        " ; if [ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi
 
 
 # --------------------------------------------------------- Install dependancies
 RUN apk add --update --no-cache \
+        # Dependencies for gd \
+        freetype-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
         # Dependancy for intl \
         icu-libs \
         libintl \
         # Dependancy for zip \
         libzip \
         # Misc tools \
-        aria2 \
+        fcgi \
         git \
         patch
 
 
 # --------------------------------------------------- Install build dependancies
 RUN apk add --update --no-cache --virtual .docker-php-global-dependancies \
-        # Build dependencies for gd \
-        freetype-dev \
-        libjpeg-turbo-dev \
-        libpng-dev \
         # Build dependency for gettext \
         gettext-dev \
         # Build dependency for gmp \
@@ -106,10 +106,16 @@ RUN php -m && \
     php -m
 
 
+# -------------------------------------------------- Install php-fpm-healthcheck
+RUN sed -i 's#^;pm.status_path = .*#pm.status_path = /status#g' /usr/local/etc/php-fpm.d/www.conf && \
+    wget -O /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck && \
+    chmod +x /usr/local/bin/php-fpm-healthcheck
+
+
 # --------------------------------------------------- Conditionnal installations
 # Enable APCu
 RUN if [ "${DOCKER_PHP_ENABLE_APCU}" != "off" ]; then \
-      pecl install apcu && \
+      printf "\n" | pecl install apcu && \
       docker-php-ext-enable apcu && \
       php -m; \
     else \
@@ -136,12 +142,12 @@ RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
       # Build dependancy for imagick \
       apk add --update --no-cache --virtual .docker-php-imagick-dependancies \
           imagemagick-dev && \
-      pecl install imagick && \
+      printf "\n" | pecl install imagick && \
       docker-php-ext-enable imagick && \
       apk del .docker-php-imagick-dependancies && \
       php -m; \
     else \
-      echo "Skip apcu support"; \
+      echo "Skip imagick support"; \
     fi
 
 # Enable LDAP
@@ -171,7 +177,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_MEMCACHED}" != "off" ]; then \
           cyrus-sasl-dev \
           libevent-dev \
           libmemcached-dev && \
-      pecl install memcached && \
+      printf "\n" | pecl install memcached && \
       docker-php-ext-enable memcached && \
       apk del .docker-php-memcached-dependancies && \
       php -m; \
@@ -184,7 +190,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_MONGODB}" != "off" ]; then \
       apk add --update --no-cache --virtual .docker-php-mongodb-dependancies \
           # Dependancies for MongoDB \
           heimdal-dev && \
-      pecl install mongodb && \
+      printf "\n" | pecl install mongodb && \
       docker-php-ext-enable mongodb && \
       apk del .docker-php-mongodb-dependancies && \
       php -m; \
@@ -230,7 +236,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_POSTGRESQL}" != "off" ]; then \
 
 # Enable Redis
 RUN if [ "${DOCKER_PHP_ENABLE_REDIS}" != "off" ]; then \
-      pecl install redis && \
+      printf "\n" | pecl install redis && \
       docker-php-ext-enable redis && \
       php -m; \
     else \
@@ -245,7 +251,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_SYMFONY}" != "off" ]; then \
       # Build dependancy for YAML \
       apk add --update --no-cache --virtual .docker-php-symfony-dependancies \
           yaml-dev && \
-      pecl install yaml && \
+      printf "\n" | pecl install yaml && \
       docker-php-ext-enable yaml; \
       apk del .docker-php-symfony-dependancies && \
       php -m; \
