@@ -4,9 +4,7 @@ on:
   schedule:
   - cron: '5 4 * * 2'
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 env:
   GHCR_REGISTRY: ghcr.io
@@ -20,26 +18,33 @@ jobs:
   #
   test_dockerfiles:
     runs-on: ubuntu-latest
-    name: QA for Dockerfile
+    name: Linter for Dockerfile
 
     strategy:
       fail-fast: false
       matrix:
-        httpd-version: [7.3, 7.4, "8.0"]
+        php-version: [7.3, 7.4, "8.0"]
 
     steps:
     - name: Git checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+
+    - name: Docker Lint
+      uses: luke142367/Docker-Lint-Action@v1.0.0
+      with:
+        target: ${{ matrix.php-version }}/Dockerfile
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
   ##############################################################################
-  # markdownlint tests job
+  # Several linter tests job
   #
-  test_markdownlint:
+  test_linters:
     runs-on: ubuntu-latest
-    name: QA for Markdown files
+    name: Linters and checkstyle
 
     steps:
     - name: Git checkout
@@ -47,11 +52,14 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: markdownlint-cli
+    - name: Use markdownlint-cli
       uses: nosborn/github-action-markdown-cli@v2.0.0
       with:
         files: "*.md */*.md"
         config_file: ".markdownlint.yaml"
+
+    - name: Use editorconfig-checker
+      uses: editorconfig-checker/action-editorconfig-checker@v1
 
 
   ##############################################################################
@@ -108,12 +116,13 @@ jobs:
 
 
   ##############################################################################
-  # Build and deploy job
+  # Build and deploy job (only on main)
   #
   build_deploy:
+    if: github.ref == 'refs/heads/main'
     needs: [
       test_dockerfiles,
-      test_markdownlint,
+      test_linters,
       build_test
     ]
     runs-on: ubuntu-latest
