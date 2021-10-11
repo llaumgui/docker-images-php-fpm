@@ -50,6 +50,7 @@ RUN apk add --update --no-cache \
         libintl \
         # Dependancy for zip \
         libzip \
+        unzip \
         # Misc tools \
         fcgi \
         git \
