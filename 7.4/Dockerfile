@@ -138,7 +138,8 @@ RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
       # Dependancy for imagick \
       apk add --update --no-cache \
           imagemagick \
-          imagemagick-libs && \
+          imagemagick-libs \
+          libgomp && \
 
       # Build dependancy for imagick \
       apk add --update --no-cache --virtual .docker-php-imagick-dependancies \
