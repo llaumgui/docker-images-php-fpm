@@ -61,6 +61,8 @@ You can use this container in a docker-compose.yml file:
     container_name: php74
     image: llaumgui/php:7.4-fpm
     restart: always
+    environment:
+      TZ: 'Europe/Paris'
     volumes:
      - /etc/localtime:/etc/localtime:ro
      - /var/www:/var/www
@@ -90,6 +92,8 @@ You can use this container in a docker-compose.yml file:
         DOCKER_PHP_ENABLE_SYMFONY: 'off'
         DOCKER_PHP_ENABLE_XDEBUG: 'off'
     restart: always
+    environment:
+      TZ: 'Europe/Paris'
     volumes:
      - /etc/localtime:/etc/localtime:ro
      - /var/www:/var/www

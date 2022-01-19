@@ -54,7 +54,8 @@ RUN apk add --update --no-cache \
         # Misc tools \
         fcgi \
         git \
-        patch
+        patch \
+        tzdata
 
 
 # --------------------------------------------------- Install build dependancies
