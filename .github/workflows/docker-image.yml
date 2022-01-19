@@ -32,6 +32,7 @@ jobs:
         fetch-depth: 0
 
     - name: Docker Lint
+      if: github.event.schedule == ''
       uses: luke142367/Docker-Lint-Action@v1.1.1
       with:
         target: ${{ matrix.php-version }}/Dockerfile
