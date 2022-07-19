@@ -264,6 +264,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_SYMFONY}" != "off" ]; then \
 # Enable Xdebug
 RUN if [ "${DOCKER_PHP_ENABLE_XDEBUG}" != "off" ]; then \
       # Build dependancy for XDebug \
+      apk add --update linux-headers && \
       apk add --update --no-cache --virtual .docker-php-xdebug-dependancies \
           bash \
           git && \
