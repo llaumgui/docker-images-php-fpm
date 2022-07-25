@@ -25,6 +25,9 @@ ARG DOCKER_PHP_ENABLE_REDIS="on"
 ARG DOCKER_PHP_ENABLE_SYMFONY="on"
 ARG DOCKER_PHP_ENABLE_XDEBUG="off"
 
+# Fix hadolint #DL4006 (https://github.com/hadolint/hadolint/wiki/DL4006)
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+
 RUN echo "With apcu support:          " ; if [ "${DOCKER_PHP_ENABLE_APCU}" = "on" ] ;        then echo "Yes"; else echo "No" ; fi && \
     echo "With composer support:      " ; if [ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
     echo "With exif support:          " ; if [ "${DOCKER_PHP_ENABLE_EXIF}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
@@ -110,7 +113,7 @@ RUN php -m && \
 
 # -------------------------------------------------- Install php-fpm-healthcheck
 RUN sed -i 's#^;pm.status_path = .*#pm.status_path = /status#g' /usr/local/etc/php-fpm.d/www.conf && \
-    wget -O /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck && \
+    wget  --progress=dot:giga -O /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck && \
     chmod +x /usr/local/bin/php-fpm-healthcheck
 
 
