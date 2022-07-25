@@ -20,11 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Linter for Dockerfile
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php-version: ["7.4", "8.0", "8.1"]
-
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
@@ -33,11 +28,9 @@ jobs:
 
     - name: Docker Lint
       if: github.event.schedule == ''
-      uses: luke142367/Docker-Lint-Action@v1.1.1
+      uses: hadolint/hadolint-action@v2.0.0
       with:
-        target: ${{ matrix.php-version }}/Dockerfile
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        recursive: true
 
 
   ##############################################################################
