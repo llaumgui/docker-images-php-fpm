@@ -46,11 +46,13 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Use markdownlint-cli
-      uses: nosborn/github-action-markdown-cli@v3.2.0
+    - name: Use markdownlint-cli2
+      uses: DavidAnson/markdownlint-cli2-action@v9
       with:
-        files: "*.md */*.md"
-        config_file: ".markdownlint.yaml"
+        command: config
+        globs: |
+          .markdownlint.yaml
+          **/*.md
 
     - name: Use editorconfig-checker
       uses: editorconfig-checker/action-editorconfig-checker@v1
