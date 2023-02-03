@@ -28,7 +28,7 @@ jobs:
 
     - name: Docker Lint
       if: github.event.schedule == ''
-      uses: hadolint/hadolint-action@v2.0.0
+      uses: hadolint/hadolint-action@v3.1.0
       with:
         recursive: true
 
