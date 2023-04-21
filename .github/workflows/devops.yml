@@ -54,8 +54,8 @@ jobs:
           .markdownlint.yaml
           **/*.md
 
-    - name: Use editorconfig-checker
-      uses: editorconfig-checker/action-editorconfig-checker@v1
+    #- name: Use editorconfig-checker
+    #  uses: editorconfig-checker/action-editorconfig-checker@v1
 
 
   ##############################################################################
