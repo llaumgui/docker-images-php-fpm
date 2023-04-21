@@ -107,6 +107,7 @@ RUN php -m && \
         opcache \
         pcntl \
         soap \
+        sysvsem \
         zip && \
     php -m
 
@@ -269,7 +270,8 @@ RUN if [ "${DOCKER_PHP_ENABLE_XDEBUG}" != "off" ]; then \
       # Build dependancy for XDebug \
       apk add --update --no-cache --virtual .docker-php-xdebug-dependancies \
           bash \
-          git && \
+          git \
+          linux-headers && \
       git clone https://github.com/xdebug/xdebug.git && \
       cd xdebug && \
       ./rebuild.sh && \
