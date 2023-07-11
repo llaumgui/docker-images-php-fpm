@@ -23,6 +23,7 @@ PHP 8.2 image:
 * Capability to disable some additionals extensions (need rebuild and pass build arg):
   * APCu
   * exif
+  * ffmpeg
   * imagick
   * ldap
   * memcached
