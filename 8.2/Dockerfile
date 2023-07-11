@@ -161,7 +161,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
 # Enable ffmpeg
 RUN if [ "${DOCKER_PHP_ENABLE_FFMPEG}" != "off" ]; then \
       apk add --update --no-cache \
-          ffmpeg \
+          ffmpeg; \
     else \
       echo "Skip ffmpeg support"; \
     fi
