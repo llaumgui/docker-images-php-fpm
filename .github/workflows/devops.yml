@@ -47,7 +47,7 @@ jobs:
         fetch-depth: 0
 
     - name: Use markdownlint-cli2
-      uses: DavidAnson/markdownlint-cli2-action@v9
+      uses: DavidAnson/markdownlint-cli2-action@v11
       with:
         command: config
         globs: |
