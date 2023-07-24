@@ -108,6 +108,7 @@ RUN php -m && \
         mbstring \
         opcache \
         pcntl \
+        shmop \
         soap \
         sysvsem \
         zip && \
