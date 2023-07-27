@@ -16,6 +16,7 @@ ARG DOCKER_PHP_ENABLE_APCU="on"
 ARG DOCKER_PHP_ENABLE_COMPOSER="on"
 ARG DOCKER_PHP_ENABLE_EXIF="on"
 ARG DOCKER_PHP_ENABLE_IMAGICK="on"
+ARG DOCKER_PHP_ENABLE_FFMPEG="on"
 ARG DOCKER_PHP_ENABLE_LDAP="on"
 ARG DOCKER_PHP_ENABLE_MEMCACHED="on"
 ARG DOCKER_PHP_ENABLE_MONGODB="on"
@@ -28,18 +29,19 @@ ARG DOCKER_PHP_ENABLE_XDEBUG="off"
 # Fix hadolint #DL4006 (https://github.com/hadolint/hadolint/wiki/DL4006)
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
-RUN echo "With apcu support:          " ; if [ "${DOCKER_PHP_ENABLE_APCU}" = "on" ] ;        then echo "Yes"; else echo "No" ; fi && \
-    echo "With composer support:      " ; if [ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo "With exif support:          " ; if [ "${DOCKER_PHP_ENABLE_EXIF}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
-    echo "With imagick support:       " ; if [ "${DOCKER_PHP_ENABLE_IMAGICK}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
-    echo "With ldap support:          " ; if [ "${DOCKER_PHP_ENABLE_LDAP}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
+RUN echo "With apcu support:          " ; if [ "${DOCKER_PHP_ENABLE_APCU}" = "on" ] ;       then echo "Yes"; else echo "No" ; fi && \
+    echo "With composer support:      " ; if [ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ] ;   then echo "Yes"; else echo "No" ; fi && \
+    echo "With exif support:          " ; if [ "${DOCKER_PHP_ENABLE_EXIF}" = "on" ] ;       then echo "Yes"; else echo "No" ; fi && \
+    echo "With imagick support:       " ; if [ "${DOCKER_PHP_ENABLE_IMAGICK}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With ffmpeg support:        " ; if [ "${DOCKER_PHP_ENABLE_FFMPEG}" = "on" ] ;     then echo "Yes"; else echo "No" ; fi && \
+    echo "With ldap support:          " ; if [ "${DOCKER_PHP_ENABLE_LDAP}" = "on" ] ;       then echo "Yes"; else echo "No" ; fi && \
     echo "With memcached support:     " ; if [ "${DOCKER_PHP_ENABLE_MEMCACHED}" = "on" ] ;  then echo "Yes"; else echo "No" ; fi && \
     echo "With mongodb support:       " ; if [ "${DOCKER_PHP_ENABLE_MONGODB}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo "With mysql support:         " ; if [ "${DOCKER_PHP_ENABLE_MYSQL}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With mysql support:         " ; if [ "${DOCKER_PHP_ENABLE_MYSQL}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
     echo "With postgresql support:    " ; if [ "${DOCKER_PHP_ENABLE_POSTGRESQL}" = "on" ] ; then echo "Yes"; else echo "No" ; fi && \
-    echo "With redis support:         " ; if [ "${DOCKER_PHP_ENABLE_REDIS}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
+    echo "With redis support:         " ; if [ "${DOCKER_PHP_ENABLE_REDIS}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi && \
     echo "With symfony support:       " ; if [ "${DOCKER_PHP_ENABLE_SYMFONY}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
-    echo "With xdebug support:        " ; if [ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ] ;      then echo "Yes"; else echo "No" ; fi
+    echo "With xdebug support:        " ; if [ "${DOCKER_PHP_ENABLE_XDEBUG}" = "on" ] ;     then echo "Yes"; else echo "No" ; fi
 
 
 # --------------------------------------------------------- Install dependancies
@@ -106,6 +108,7 @@ RUN php -m && \
         mbstring \
         opcache \
         pcntl \
+        shmop \
         soap \
         sysvsem \
         zip && \
@@ -154,6 +157,14 @@ RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
       php -m; \
     else \
       echo "Skip imagick support"; \
+    fi
+
+# Enable ffmpeg
+RUN if [ "${DOCKER_PHP_ENABLE_FFMPEG}" != "off" ]; then \
+      apk add --update --no-cache \
+          ffmpeg; \
+    else \
+      echo "Skip ffmpeg support"; \
     fi
 
 # Enable LDAP
@@ -318,6 +329,9 @@ COPY etc /usr/local/etc/php
 RUN apk del .docker-php-global-dependancies && \
     rm -rf /var/cache/apk/* && \
     docker-php-source delete
+
+# Healthcheck
+HEALTHCHECK --interval=1m --timeout=10s --start-period=1m --retries=3 CMD FCGI_CONNECT=localhost:9000 php-fpm-healthcheck
 
 EXPOSE 9000
 WORKDIR /var/www

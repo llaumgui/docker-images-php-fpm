@@ -329,7 +329,7 @@ COPY etc /usr/local/etc/php
 RUN apk del .docker-php-global-dependancies && \
     rm -rf /var/cache/apk/* && \
     docker-php-source delete
-    
+
 # Healthcheck
 HEALTHCHECK --interval=1m --timeout=10s --start-period=1m --retries=3 CMD FCGI_CONNECT=localhost:9000 php-fpm-healthcheck
 

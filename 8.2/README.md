@@ -16,6 +16,7 @@ PHP 8.2 image:
   * intl
   * mbstring
   * opcache
+  * shmop
   * xmlrpc
 * Additionals binaries:
   * GIT
@@ -84,6 +85,7 @@ You can use this container in a docker-compose.yml file:
         DOCKER_PHP_ENABLE_COMPOSER: 'off'
         DOCKER_PHP_ENABLE_EXIF: 'off'
         DOCKER_PHP_ENABLE_IMAGICK: 'off'
+        DOCKER_PHP_ENABLE_FFMPEG: 'onf'
         DOCKER_PHP_ENABLE_LDAP: 'off'
         DOCKER_PHP_ENABLE_MEMCACHED: 'off'
         DOCKER_PHP_ENABLE_MONGODB: 'off'
