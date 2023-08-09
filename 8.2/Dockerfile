@@ -57,6 +57,7 @@ RUN apk add --update --no-cache \
         libzip \
         unzip \
         # Misc tools \
+        coreutils \
         fcgi \
         git \
         patch \
