@@ -11,7 +11,7 @@ LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.version="8.2"
 
 # Fix hadolint #DL4006 (https://github.com/hadolint/hadolint/wiki/DL4006)
-SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 
 # ------------------------------------------------------------ Install utilities
