@@ -13,20 +13,23 @@ LABEL org.opencontainers.image.version="8.2"
 # Fix hadolint #DL4006 (https://github.com/hadolint/hadolint/wiki/DL4006)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN apt-get update
 
 # ----------------------------------------------------------------- Install cron
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install --no-install-recommends -y \
         busybox-static && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
     mkdir -p /var/spool/cron/crontabs && \
     echo '*/5 * * * * php -f /var/www/cron.php' > /var/spool/cron/crontabs/www-data
 COPY --chmod=755 cron.sh /
 
 
 # ------------------------------------------------------------------ Supervisord
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install --no-install-recommends -y \
         # Install supervisor to start multiple processes on container startup \
-        supervisor
+        supervisor&& \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 RUN mkdir "/var/run/supervisor"
 RUN rm -rf /etc/supervisor/*
 COPY supervisor/*.conf /etc/supervisor
@@ -34,16 +37,18 @@ COPY supervisor/*.sh /
 
 
 # ----------------------------------------------------- Install Search and cron utilities
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install --no-install-recommends -y \
         # Install tesseract and ocrmypdf for OCR \
         tesseract-ocr \
         tesseract-ocr-fra \
         tesseract-ocr-eng \
-        ocrmypdf
+        ocrmypdf && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 
 # ------------------------------------------------------------ Install utilities
-RUN apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install --no-install-recommends -y \
         # Misc tools \
         bzip2 \
         curl \
@@ -56,7 +61,9 @@ RUN apt-get install -y --no-install-recommends \
         libzip4 \
         procps \
         unzip \
-        wget
+        wget && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 
 # --------------------------------------------------------- Install dependancies
@@ -87,7 +94,7 @@ RUN fetchDeps=" \
         libpq-dev \
         zlib1g-dev" ; \
     apt-get update ; \
-    apt-get install -y --no-install-recommends ${fetchDeps}; \
+    apt-get install --no-install-recommends -y ${fetchDeps}; \
 \
 \
 # ------------------------------------------------------- Install php extensions \
@@ -129,7 +136,7 @@ RUN fetchDeps=" \
 \
 # ------------------------------------------------------------------ Big cleanup \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${fetchDeps}; \
-    apt clean && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/* \
            /tmp/* \
            /var/tmp/* \
