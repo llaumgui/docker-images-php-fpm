@@ -13,10 +13,37 @@ LABEL org.opencontainers.image.version="8.2"
 # Fix hadolint #DL4006 (https://github.com/hadolint/hadolint/wiki/DL4006)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+RUN apt-get update
+
+# ----------------------------------------------------------------- Install cron
+RUN apt-get install -y --no-install-recommends \
+        busybox-static && \
+    mkdir -p /var/spool/cron/crontabs && \
+    echo '*/5 * * * * php -f /var/www/cron.php' > /var/spool/cron/crontabs/www-data
+COPY --chmod=755 cron.sh /
+
+
+# ------------------------------------------------------------------ Supervisord
+RUN apt-get install -y --no-install-recommends \
+        # Install supervisor to start multiple processes on container startup \
+        supervisor
+RUN mkdir "/var/run/supervisor"
+RUN rm -rf /etc/supervisor/*
+COPY supervisor/*.conf /etc/supervisor
+COPY supervisor/*.sh /
+
+
+# ----------------------------------------------------- Install Search and cron utilities
+RUN apt-get install -y --no-install-recommends \
+        # Install tesseract and ocrmypdf for OCR \
+        tesseract-ocr \
+        tesseract-ocr-fra \
+        tesseract-ocr-eng \
+        ocrmypdf
+
 
 # ------------------------------------------------------------ Install utilities
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
         # Misc tools \
         bzip2 \
         curl \
@@ -27,9 +54,9 @@ RUN apt-get update && \
         libmagickcore-6.q16-6-extra \
         libpng16-16 \
         libzip4 \
+        procps \
         unzip \
-        wget && \
-    rm -rf /var/lib/apt/lists/*
+        wget
 
 
 # --------------------------------------------------------- Install dependancies
@@ -54,7 +81,6 @@ RUN fetchDeps=" \
         # Build dependencies for Zip \
         libzip-dev \
         # Misc build dependencies \
-        busybox-static \
         libcurl4-openssl-dev \
         libevent-dev \
         libmcrypt-dev \
@@ -103,7 +129,11 @@ RUN fetchDeps=" \
 \
 # ------------------------------------------------------------------ Big cleanup \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${fetchDeps}; \
-    rm -rf /var/lib/apt/lists/*
+    apt clean && \
+    rm -rf /var/lib/apt/lists/* \
+           /tmp/* \
+           /var/tmp/* \
+           /usr/share/doc/*
 
 
 # -------------------------------------------------- Install php-fpm-healthcheck
@@ -117,9 +147,11 @@ RUN sed -i 's#^;pm.status_path = .*#pm.status_path = /status#g' /usr/local/etc/p
 COPY php.d /usr/local/etc/php/conf.d
 COPY etc /usr/local/etc/php
 
-
 # Healthcheck
 HEALTHCHECK --interval=1m --timeout=10s --start-period=1m --retries=3 CMD FCGI_CONNECT=localhost:9000 php-fpm-healthcheck
 
 EXPOSE 9000
 WORKDIR /var/www
+
+ENTRYPOINT []
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
