@@ -153,6 +153,8 @@ RUN sed -i 's#^;pm.status_path = .*#pm.status_path = /status#g' /usr/local/etc/p
 # My configuration.
 COPY php.d /usr/local/etc/php/conf.d
 COPY etc /usr/local/etc/php
+# Remove access log
+RUN sed -i 's#^access.log = /proc/self/fd/2#access.log = /dev/null#g' /usr/local/etc/php-fpm.d/docker.conf
 
 # Healthcheck
 HEALTHCHECK --interval=1m --timeout=10s --start-period=1m --retries=3 CMD FCGI_CONNECT=localhost:9000 php-fpm-healthcheck
