@@ -8,8 +8,13 @@
 
 PHP 8.2-nextcloud image:
 
-* Forked from [official Nextcloud](https://github.com/nextcloud/docker/blob/09fecda4067434c11f955cdd3000ed950fe48d04/27/fpm/Dockerfile) (nextcloud:fpm).
-* Using Debian with GLibC used by [reconize](https://github.com/nextcloud/recognize) for native speed.
+* Based on [official Nextcloud](https://github.com/nextcloud/docker/blob/09fecda4067434c11f955cdd3000ed950fe48d04/27/fpm/Dockerfile) (nextcloud:fpm).
+* Use Debian with GLibC for [reconize](https://github.com/nextcloud/recognize) with **native speed mode**.
+* Use [Supervisor](http://supervisord.org/) to launch several process.
+* Implement cron.
+* Add [Full text search](https://apps.nextcloud.com/apps/fulltextsearch) support:
+  * Install [Tesseract](https://github.com/tesseract-ocr/tesseract) and [OCRmyPDF](https://ocrmypdf.readthedocs.io/en/latest/) for OCR.
+  * Run `occ:fulltextsearch:live` to auto index new contents.
 * Additionals PHP extensions:
   * intl
 * Additionals binaries:
@@ -48,11 +53,11 @@ You can use this container in a docker-compose.yml file:
      - 9000
 ~~~
 
-[ico-twitter]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=50ABF1&logo=twitter&style=flat-square
+[ico-twitter]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=000&logo=x&style=flat-square
 [link-twitter]: https://twitter.com/llaumgui
 [ico-docker]: https://img.shields.io/docker/pulls/llaumgui/php?color=%2496ed&logo=docker&style=flat-square
 [link-docker]: https://hub.docker.com/r/llaumgui/php
-[ico-ghactions]: https://img.shields.io/github/workflow/status/llaumgui/docker-images-php-fpm/Docker%20image%20CI%20CD?style=flat-square&logo=github&label=CI/CD
+[ico-ghactions]: https://img.shields.io/github/actions/workflow/status/llaumgui/docker-images-php-fpm/devops.yml?branch=main&style=flat-square&logo=github&label=CI/CD
 [link-ghactions]: https://github.com/llaumgui/docker-images-php-fpm/actions
 [ico-version]: https://img.shields.io/docker/v/llaumgui/php?sort=semver&color=%2496ed&logo=docker&style=flat-square
 [ico-license]: https://img.shields.io/github/license/llaumgui/docker-images-php-fpm?style=flat-square
