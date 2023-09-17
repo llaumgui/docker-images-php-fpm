@@ -89,7 +89,7 @@ jobs:
       with:
         context: ${{ matrix.php-version }}
         tags: |
-          ${{ github.actor }}/php:${{ matrix.php-version }}
+          llaumgui/php:${{ matrix.php-version }}
         labels: ${{ steps.meta.outputs.labels }}
 
     # Test with Trivy
@@ -97,7 +97,7 @@ jobs:
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ${{ github.actor }}/php:${{ matrix.php-version }}
+        image-ref: llaumgui/php:${{ matrix.php-version }}
         format: 'template'
         template: '@/contrib/sarif.tpl'
         output: 'trivy-results.sarif'
