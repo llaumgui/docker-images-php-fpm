@@ -60,6 +60,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libpng16-16 \
         libzip4 \
         procps \
+        python-is-python3 \
         unzip \
         wget && \
     apt-get clean && \
