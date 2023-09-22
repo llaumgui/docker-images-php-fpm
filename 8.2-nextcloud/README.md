@@ -16,10 +16,11 @@ PHP 8.2-nextcloud image:
   * Install [Tesseract](https://github.com/tesseract-ocr/tesseract) and [OCRmyPDF](https://ocrmypdf.readthedocs.io/en/latest/) for OCR.
   * Run `occ:fulltextsearch:live` to auto index new contents.
 * Additionals PHP extensions:
-  * intl
+  * intl.
 * Additionals binaries:
-  * GIT
-  * [php-fpm-healthcheck](https://github.com/renatomefi/php-fpm-healthcheck)
+  * GIT.
+  * [php-fpm-healthcheck](https://github.com/renatomefi/php-fpm-healthcheck).
+  * Python and python3-venv for [Local Large language model](https://apps.nextcloud.com/apps/llm).
 * Some configuration:
   * A dedicated php-cli.ini.
 

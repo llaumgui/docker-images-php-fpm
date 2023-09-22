@@ -36,20 +36,22 @@ COPY supervisor/*.conf /etc/supervisor
 COPY supervisor/*.sh /
 
 
-# ----------------------------------------------------- Install Search and cron utilities
+# --------------------------------------------- Install Search and LLM utilities
 RUN apt-get update && apt-get install --no-install-recommends -y \
         # Install tesseract and ocrmypdf for OCR \
         tesseract-ocr \
         tesseract-ocr-fra \
         tesseract-ocr-eng \
-        ocrmypdf && \
+        ocrmypdf \
+        # Install Python for Local Large language model \
+        python-is-python3 \
+        python3-venv && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 
-# ------------------------------------------------------------ Install utilities
+# ------------------------------------------------------- Install misc utilities
 RUN apt-get update && apt-get install --no-install-recommends -y \
-        # Misc tools \
         bzip2 \
         curl \
         ffmpeg \
@@ -60,7 +62,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libpng16-16 \
         libzip4 \
         procps \
-        python-is-python3 \
         unzip \
         wget && \
     apt-get clean && \
