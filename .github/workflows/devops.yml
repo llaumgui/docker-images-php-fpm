@@ -1,37 +1,31 @@
 name: DevOps
-
 on:
   schedule:
   - cron: '5 4 * * 2'
   push:
   pull_request:
-
 env:
   GHCR_REGISTRY: ghcr.io
-  IMAGE_NAME: llaumgui/php-fpm
+  IMAGE_NAME: llaumgui/php
   LATEST: '8.2'
 
 jobs:
-
   ##############################################################################
   # Dockerfile tests job
   #
   test_dockerfiles:
     runs-on: ubuntu-latest
     name: Linters for Dockerfile
-
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
-
     - name: hadolint
       if: github.event.schedule == ''
       uses: hadolint/hadolint-action@v3.1.0
       with:
         recursive: true
-
 
   ##############################################################################
   # Several linter tests job
@@ -39,21 +33,17 @@ jobs:
   test_linters:
     runs-on: ubuntu-latest
     name: Linters and checkstyle
-
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
-
     - name: Use markdownlint-cli2
-      uses: DavidAnson/markdownlint-cli2-action@v12
+      uses: DavidAnson/markdownlint-cli2-action@v13
       with:
         config: .markdownlint.yaml
-
     - name: Use editorconfig-checker
       uses: editorconfig-checker/action-editorconfig-checker@main
-
 
   ##############################################################################
   # Build and tests job
@@ -61,18 +51,15 @@ jobs:
   build_test:
     runs-on: ubuntu-latest
     name: Build and test docker images
-
     strategy:
       fail-fast: false
       matrix:
         php-version: ["8.1", "8.2", "8.2-nextcloud"]
-
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
-
     # Extract metadata (tags, labels) for Docker
     # https://github.com/docker/metadata-action
     - name: Extract Docker metadata
@@ -81,7 +68,6 @@ jobs:
       with:
         images:
           ${{ env.IMAGE_NAME }}
-
     # Build and push Docker image with Buildx (don't push on PR)
     # https://github.com/docker/build-push-action
     - name: Build Docker image
@@ -89,24 +75,23 @@ jobs:
       with:
         context: ${{ matrix.php-version }}
         tags: |
-          llaumgui/php:${{ matrix.php-version }}
+          ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
         labels: ${{ steps.meta.outputs.labels }}
-
+        cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
+        cache-to: type=inline       
     # Test with Trivy
     # https://github.com/aquasecurity/trivy-action
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: llaumgui/php:${{ matrix.php-version }}
+        image-ref: ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
         format: 'template'
         template: '@/contrib/sarif.tpl'
         output: 'trivy-results.sarif'
-
     - name: Upload Trivy scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: 'trivy-results.sarif'
-
 
   ##############################################################################
   # Build and deploy job (only on main)
@@ -120,18 +105,15 @@ jobs:
     ]
     runs-on: ubuntu-latest
     name: Build and deploy docker images
-
     strategy:
       fail-fast: false
       matrix:
         php-version: ["8.1", "8.2", "8.2-nextcloud"]
-
     steps:
     - name: Git checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
-
     # Login against 2 Docker registries except on PR
     # https://github.com/docker/login-action
     - name: Log in to Docker Hub
@@ -147,7 +129,6 @@ jobs:
         registry: ${{ env.GHCR_REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-
     # Extract metadata (tags, labels) for Docker
     # https://github.com/docker/metadata-action
     - name: Extract Docker metadata
@@ -157,7 +138,6 @@ jobs:
         images: |
           ${{ env.IMAGE_NAME }}
           ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}
-
     # Build and push Docker image with Buildx (don't push on PR)
     # https://github.com/docker/build-push-action
     - name: Build and push Docker image
@@ -167,11 +147,13 @@ jobs:
         context: ${{ matrix.php-version }}
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
-          ${{ github.actor }}/php:${{ matrix.php-version }}
-          ${{ github.actor }}/php:latest
-          ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php-version }}
+          ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
+          ${{ env.IMAGE_NAME }}:latest
+          ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
           ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
         labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
+        cache-to: type=inline
     - name: Build and push Docker image
       if: matrix.php-version != ${{ env.LATEST }}
       uses: docker/build-push-action@v5
@@ -179,6 +161,6 @@ jobs:
         context: ${{ matrix.php-version }}
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
-          ${{ github.actor }}/php:${{ matrix.php-version }}
-          ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php-version }}
+          ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
+          ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
         labels: ${{ steps.meta.outputs.labels }}
