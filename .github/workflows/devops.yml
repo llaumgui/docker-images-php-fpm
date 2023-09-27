@@ -78,7 +78,7 @@ jobs:
           ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: |
-          ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
+          ref=${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
           type=registry
         cache-to: type=inline       
     # Test with Trivy
@@ -155,7 +155,7 @@ jobs:
           ${{ env.GHCR_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: |
-          ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
+          ref=${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
           type=registry
         cache-to: type=inline
     - name: Build and push Docker image
