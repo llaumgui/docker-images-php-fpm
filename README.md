@@ -19,7 +19,7 @@ And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/m
 ## Usage from GitHub Packages
 
 ```bash
-docker pull ghcr.io/llaumgui/php-fpm:latest
+docker pull ghcr.io/llaumgui/php:latest
 ```
 
 And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.2).
