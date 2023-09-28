@@ -48,7 +48,6 @@ You can run this container with docker client:
 
 ~~~bash
 docker run -d \
-  --volumes /etc/localtime:/etc/localtime:ro \
   --volumes /docker/volumes/www:/var/www \
   --expose 9000 \
   llaumgui/php:8.1-fpm
@@ -66,7 +65,6 @@ You can use this container in a docker-compose.yml file:
     environment:
       TZ: 'Europe/Paris'
     volumes:
-     - /etc/localtime:/etc/localtime:ro
      - /var/www:/var/www
     expose:
      - 9000
@@ -98,7 +96,6 @@ You can use this container in a docker-compose.yml file:
     environment:
       TZ: 'Europe/Paris'
     volumes:
-     - /etc/localtime:/etc/localtime:ro
      - /var/www:/var/www
     expose:
      - 9000
