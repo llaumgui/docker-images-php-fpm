@@ -70,6 +70,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 # --------------------------------------------------------- Install dependancies
 RUN fetchDeps=" \
+        # Dependency for bz2 \
+        libbz2-dev \
         # Dependencies for gd \
         libfreetype6-dev  \
         libjpeg-dev\
@@ -106,6 +108,7 @@ RUN fetchDeps=" \
     docker-php-ext-configure ldap --with-libdir="lib/${debMultiarch}"; \
     docker-php-ext-install -j "$(nproc)" \
         bcmath \
+        bz2 \
         exif \
         gd \
         gettext \
