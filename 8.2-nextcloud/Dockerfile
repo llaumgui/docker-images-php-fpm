@@ -19,9 +19,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         busybox-static && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /var/spool/cron/crontabs && \
-    echo '*/5 * * * * php -f /var/www/cron.php' > /var/spool/cron/crontabs/www-data
-COPY --chmod=755 cron.sh /
+    mkdir -p /var/spool/cron/crontabs
+COPY --chmod=755 cron/www-data /var/spool/cron/crontabs/
+COPY --chmod=755 cron/*.sh /
 
 
 # ------------------------------------------------------------------ Supervisord

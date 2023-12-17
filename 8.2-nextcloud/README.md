@@ -12,6 +12,9 @@ PHP 8.2-nextcloud image:
 * Use Debian with GLibC for [reconize](https://github.com/nextcloud/recognize) with **native speed mode**.
 * Use [Supervisor](http://supervisord.org/) to launch several process.
 * Implement cron.
+  * Implement [Healthcheck](https://healthchecks.io/).
+  * Nextcloud cron every 5mn (use Healthcheck: `HEALTHCHECKS_NC_URL`).
+  * Auto-update extensions (use Healthcheck: `HEALTHCHECKS_UPDATE_URL`) if `NC_EXT_UPDATE` is defined.
 * Add [Full text search](https://apps.nextcloud.com/apps/fulltextsearch) support:
   * Install [Tesseract](https://github.com/tesseract-ocr/tesseract) and [OCRmyPDF](https://ocrmypdf.readthedocs.io/en/latest/) for OCR.
   * Run `occ:fulltextsearch:live` to auto index new contents.
@@ -48,6 +51,7 @@ You can use this container in a docker-compose.yml file:
     restart: always
     environment:
       TZ: 'Europe/Paris'
+      HEALTHCHECKS_NC_URL: 'https://healthchecks.io/ping/c6ff4460-abc7-41ce-8e33-a671f17b9319'
     volumes:
      - /var/www:/var/www
     expose:
