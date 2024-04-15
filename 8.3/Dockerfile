@@ -50,6 +50,9 @@ RUN apk add --update --no-cache \
         freetype-dev \
         libjpeg-turbo-dev \
         libpng-dev \
+        # Dependancy for gmp \
+        gmp \
+        libgmpxx \
         # Dependancy for intl \
         icu-libs \
         libintl \
