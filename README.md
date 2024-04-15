@@ -14,7 +14,7 @@ Repository with my php-fpm's Dockerfile for my Docker/Podman images.
 docker pull llaumgui/php
 ```
 
-And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.2).
+And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.3).
 
 ## Usage from GitHub Packages
 
@@ -22,7 +22,7 @@ And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/m
 docker pull ghcr.io/llaumgui/php:latest
 ```
 
-And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.2).
+And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.3).
 
 [ico-twitter]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=000&logo=x&style=flat-square
 [link-twitter]: https://twitter.com/llaumgui
