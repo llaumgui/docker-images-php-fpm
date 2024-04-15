@@ -7,7 +7,7 @@ on:
 env:
   GHCR_REGISTRY: ghcr.io
   IMAGE_NAME: llaumgui/php
-  LATEST: '8.2'
+  LATEST: '8.3'
 
 jobs:
   ##############################################################################
@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["8.1", "8.2", "8.2-nextcloud"]
+        php-version: ["8.1", "8.2", "8.2-nextcloud", "8.3"]
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -78,7 +78,7 @@ jobs:
           ${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:${{ matrix.php-version }}-fpm
-        cache-to: type=inline       
+        cache-to: type=inline
     # Test with Trivy
     # https://github.com/aquasecurity/trivy-action
     - name: Run Trivy vulnerability scanner
@@ -108,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["8.1", "8.2", "8.2-nextcloud"]
+        php-version: ["8.1", "8.2", "8.2-nextcloud", "8.3"]
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
