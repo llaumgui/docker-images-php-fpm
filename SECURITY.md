@@ -9,7 +9,7 @@ currently being supported with security updates.
 | --------------| ------------------ |
 | 8.3-nextcloud | :white_check_mark: |
 | 8.3           | :white_check_mark: |
-| 8.2-nextcloud | :white_check_mark: |
+| 8.2-nextcloud | :x:                |
 | 8.2           | :white_check_mark: |
 | 8.1           | :x:                |
 | 8.0           | :x:                |
