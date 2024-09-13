@@ -61,6 +61,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libmagickwand-6.q16-6 \
         libmagickcore-6.q16-6-extra \
         libpng16-16 \
+        libpq5 \
         libzip4 \
         procps \
         unzip \
@@ -88,6 +89,8 @@ RUN fetchDeps=" \
         libldap2-dev \
         # Build dependency for mbstring \
         libonig-dev\
+        # Build dependancies for PostgreSQL \
+        libpq-dev  \
         # Build dependencies for XML part \
         libxml2-dev \
         # Build dependencies for Zip \
@@ -120,6 +123,7 @@ RUN fetchDeps=" \
         opcache \
         pcntl \
         pdo_mysql \
+        pdo_pgsql \
         shmop \
         soap \
         sysvsem \

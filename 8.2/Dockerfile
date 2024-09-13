@@ -50,6 +50,9 @@ RUN apk add --update --no-cache \
         freetype-dev \
         libjpeg-turbo-dev \
         libpng-dev \
+        # Dependancy for gmp \
+        gmp \
+        libgmpxx \
         # Dependancy for intl \
         icu-libs \
         libintl \
@@ -240,11 +243,11 @@ RUN if [ "${DOCKER_PHP_ENABLE_POSTGRESQL}" != "off" ]; then \
           libpq && \
       # Build dependancies for PostgreSQL \
       apk add --update --no-cache --virtual .docker-php-postgresql-dependancies \
-          postgresql-client \
-          postgresql-dev && \
+          libpq-dev && \
       docker-php-ext-configure pdo_pgsql && \
       docker-php-ext-configure pgsql && \
-      docker-php-ext-install pdo_pgsql \
+      docker-php-ext-install \
+          pdo_pgsql \
           pgsql && \
       apk del .docker-php-postgresql-dependancies && \
       php -m; \
