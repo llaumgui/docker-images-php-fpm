@@ -63,10 +63,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libpng16-16 \
         libpq5 \
         libzip4 \
+        npm \
         procps \
         unzip \
         wget && \
     apt-get clean && \
+    npm install --global pageres-cli && \
     rm -rf /var/lib/apt/lists/*
 
 
