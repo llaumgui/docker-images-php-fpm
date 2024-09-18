@@ -56,6 +56,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         curl \
         ffmpeg \
         git \
+        gnupg \
+        imagemagick \
         libfcgi-bin \
         libldap-common \
         libmagickwand-6.q16-6 \
@@ -63,7 +65,11 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         libpng16-16 \
         libpq5 \
         libzip4 \
+        nodejs \
+        npm \
+        openssl \
         procps \
+        rsync \
         unzip \
         wget && \
     apt-get clean && \
@@ -124,6 +130,7 @@ RUN fetchDeps=" \
         pcntl \
         pdo_mysql \
         pdo_pgsql \
+        pgsql \
         shmop \
         soap \
         sysvsem \
@@ -134,6 +141,7 @@ RUN fetchDeps=" \
 # ------------------------------------------------------ Install pecl extensions \
     php -m && \
     pecl install apcu && \
+    pecl install igbinary && \
     #pecl install imagick && \
     # Tempory workaround - BEGIN \
     git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
@@ -146,8 +154,10 @@ RUN fetchDeps=" \
     make && \
     make install && \
     # Tempory workaround - END \
-    pecl install redis && \
+    pecl install redis \
+        --configureoptions 'enable-redis-igbinary="yes" enable-redis-zstd="yes" enable-redis-lz4="yes"' && \
     docker-php-ext-enable \
+        igbinary \
         apcu \
         imagick \
         redis && \
