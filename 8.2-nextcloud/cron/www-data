@@ -1,2 +1,0 @@
-*/5 * * * *     /cron_nextcloud.sh
-5 4 * * *       /cron_ext_update.sh
