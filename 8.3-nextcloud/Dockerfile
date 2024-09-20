@@ -10,6 +10,10 @@ LABEL org.opencontainers.image.authors="guillaume@kulakowski.fr"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.version="8.3"
 
+# Need by pageres
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ENV CHROMIUM_PATH /usr/bin/chromium
+
 # Fix hadolint #DL4006 (https://github.com/hadolint/hadolint/wiki/DL4006)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -54,6 +58,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 RUN apt-get update && apt-get install --no-install-recommends -y \
         bzip2 \
         curl \
+        chromium \
         ffmpeg \
         git \
         gnupg \
@@ -165,6 +170,7 @@ RUN fetchDeps=" \
 \
 \
 # ------------------------------------------------------------------ Big cleanup \
+    npm install -g pageres-cli && \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${fetchDeps}; \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* \
@@ -185,6 +191,11 @@ RUN sed -i 's#^;pm.status_path = .*#pm.status_path = /status#g' /usr/local/etc/p
 # My configuration.
 COPY php.d /usr/local/etc/php/conf.d
 COPY etc /usr/local/etc/php
+
+# Patch
+COPY patch /tmp
+RUN cd /usr/local/lib/node_modules/pageres-cli && patch -p0 < /tmp/pageres.patch && rm -f /tmp/pageres.patch
+
 # Remove access log
 RUN sed -i 's#^access.log = /proc/self/fd/2#access.log = /dev/null#g' /usr/local/etc/php-fpm.d/docker.conf
 
