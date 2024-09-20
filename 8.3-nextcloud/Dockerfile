@@ -177,7 +177,9 @@ RUN fetchDeps=" \
 # -------------------------------------------------- Install php-fpm-healthcheck
 RUN sed -i 's#^;pm.status_path = .*#pm.status_path = /status#g' /usr/local/etc/php-fpm.d/www.conf && \
     wget  --progress=dot:giga -O /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck && \
-    chmod +x /usr/local/bin/php-fpm-healthcheck
+    chmod +x /usr/local/bin/php-fpm-healthcheck && \
+    wget  --progress=dot:giga -O /usr/local/bin/cachetool https://github.com/gordalina/cachetool/releases/latest/download/cachetool.phar && \
+    chmod +x /usr/local/bin/cachetool
 
 
 # ---------------------------------------------------------------- Configuration
