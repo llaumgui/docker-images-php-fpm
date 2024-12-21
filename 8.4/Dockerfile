@@ -1,14 +1,14 @@
 # My php-fpm image, based on alpine Linux, configured and forked from the
 # official PHP docker repository.
 # @see: https://store.docker.com/images/php
-FROM php:8.2-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 LABEL org.opencontainers.image.title="llaumgui/php-fpm"
-LABEL org.opencontainers.image.description="Fork of php-fpm:8.2"
+LABEL org.opencontainers.image.description="Fork of php-fpm:8.4"
 LABEL org.opencontainers.image.vendor="Guillaume Kulakowski"
 LABEL org.opencontainers.image.authors="guillaume@kulakowski.fr"
 LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.version="8.2"
+LABEL org.opencontainers.image.version="8.4"
 
 
 # ---------------------------------------------------------- Setup build options
@@ -155,7 +155,19 @@ RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
       # Build dependancy for imagick \
       apk add --update --no-cache --virtual .docker-php-imagick-dependancies \
           imagemagick-dev && \
-      printf "\n" | pecl install imagick && \
+      #printf "\n" | pecl install imagick && \
+      # Tempory workaround - BEGIN \
+      git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
+      cd /tmp/imagick && \
+      git fetch origin master && \
+      git switch master && \
+      cd /tmp/imagick && \
+      sed -i 's/php_strtolower/zend_str_tolower/g' imagick.c && \
+      phpize && \
+      ./configure && \
+      make && \
+      make install && \
+      # Tempory workaround - END \
       docker-php-ext-enable imagick && \
       apk del .docker-php-imagick-dependancies && \
       php -m; \
@@ -325,7 +337,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_COMPOSER}" != "off" ]; then \
 
 # ---------------------------------------------------------------- Configuration
 # My configuration.
-RUN sed -i "s/^;security.limit_extensions =.*/security.limit_extensions = .php .php8 .php82/g" /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i "s/^;security.limit_extensions =.*/security.limit_extensions = .php .php8 .php84/g" /usr/local/etc/php-fpm.d/www.conf
 COPY php.d /usr/local/etc/php/conf.d
 COPY etc /usr/local/etc/php
 

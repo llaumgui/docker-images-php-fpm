@@ -1,4 +1,4 @@
-# PHP 8.2 (PHP-FPM) on alpine Linux
+# PHP 8.4 (PHP-FPM) on alpine Linux
 
 [![Author][ico-twitter]][link-twitter]
 [![Build Status][ico-ghactions]][link-ghactions]
@@ -6,9 +6,9 @@
 [![Latest Version][ico-version]][link-docker]
 [![Software License][ico-license]](LICENSE)
 
-PHP 8.2 image:
+PHP 8.4 image:
 
-* Forked from [official PHP-FPM build with alpine Linux](https://store.docker.com/images/php) (php:8.2-fpm-alpine).
+* Forked from [official PHP-FPM build with alpine Linux](https://store.docker.com/images/php) (php:8.4-fpm-alpine).
 * Additionals PHP extensions:
   * bcmath
   * gd
@@ -50,7 +50,7 @@ You can run this container with docker client:
 docker run -d \
   --volumes /docker/volumes/www:/var/www \
   --expose 9000 \
-  llaumgui/php:8.2-fpm
+  llaumgui/php:8.4-fpm
 ~~~
 
 ### With compose
@@ -58,9 +58,9 @@ docker run -d \
 You can use this container in a docker-compose.yml file:
 
 ~~~yaml
-  php82:
-    container_name: php82
-    image: llaumgui/php:8.2-fpm
+  php84:
+    container_name: php84
+    image: llaumgui/php:8.4-fpm
     restart: always
     environment:
       TZ: 'Europe/Paris'
@@ -73,9 +73,9 @@ You can use this container in a docker-compose.yml file:
 ## Rebuild with less extensions
 
 ~~~yaml
-  php82:
-    container_name: php:8.2-fpm
-    image: llaumgui/php:8.2-fpm
+  php84:
+    container_name: php:8.4-fpm
+    image: llaumgui/php:8.4-fpm
     build:
       context: ../PATH_TO_DOCKERFILE/
       args:

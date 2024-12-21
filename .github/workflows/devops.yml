@@ -7,7 +7,7 @@ on:
 env:
   GHCR_REGISTRY: ghcr.io
   IMAGE_NAME: llaumgui/php
-  LATEST: '8.3'
+  LATEST: '8.4'
 
 jobs:
   ##############################################################################
@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["8.2", "8.3", "8.3-nextcloud"]
+        php-version: ["8.3", "8.3-nextcloud", "8.4"]
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
@@ -108,7 +108,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["8.2", "8.3", "8.3-nextcloud"]
+        php-version: ["8.3", "8.3-nextcloud", "8.4"]
     steps:
     - name: Git checkout
       uses: actions/checkout@v4
