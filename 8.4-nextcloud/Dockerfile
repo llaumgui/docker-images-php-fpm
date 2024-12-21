@@ -1,14 +1,14 @@
 # My php-fpm image, based on debian Linux, configured and forked from the
 # official Nextcloud docker repository.
 # @see: https://github.com/nextcloud/docker/blob/09fecda4067434c11f955cdd3000ed950fe48d04/27/fpm/Dockerfile
-FROM php:8.3-fpm
+FROM php:8.4-fpm
 
 LABEL org.opencontainers.image.title="llaumgui/php-fpm"
-LABEL org.opencontainers.image.description="Fork of php-fpm:8.3 based on Nextcloud"
+LABEL org.opencontainers.image.description="Fork of php-fpm:8.4 based on Nextcloud"
 LABEL org.opencontainers.image.vendor="Guillaume Kulakowski"
 LABEL org.opencontainers.image.authors="guillaume@kulakowski.fr"
 LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.version="8.3"
+LABEL org.opencontainers.image.version="8.4"
 
 # Need by pageres
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
@@ -153,6 +153,7 @@ RUN fetchDeps=" \
     git fetch origin master && \
     git switch master && \
     cd /tmp/imagick && \
+    sed -i 's/php_strtolower/zend_str_tolower/g' imagick.c && \
     phpize && \
     ./configure && \
     make && \

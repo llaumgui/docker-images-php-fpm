@@ -1,4 +1,4 @@
-# PHP 8.3-nextcloud (PHP-FPM) on Debian (GLibC)
+# PHP 8.4-nextcloud (PHP-FPM) on Debian (GLibC)
 
 [![Author][ico-twitter]][link-twitter]
 [![Build Status][ico-ghactions]][link-ghactions]
@@ -6,7 +6,7 @@
 [![Latest Version][ico-version]][link-docker]
 [![Software License][ico-license]](LICENSE)
 
-PHP 8.3-nextcloud image:
+PHP 8.4-nextcloud image:
 
 * Based on [official Nextcloud](https://github.com/nextcloud/docker/blob/09fecda4067434c11f955cdd3000ed950fe48d04/27/fpm/Dockerfile) (nextcloud:fpm).
 * Use Debian with GLibC for [reconize](https://github.com/nextcloud/recognize) with **native speed mode**.
@@ -37,7 +37,7 @@ You can run this container with docker client:
 docker run -d \
   --volumes /docker/volumes/www:/var/www \
   --expose 9000 \
-  llaumgui/php:8.3-nextcloud
+  llaumgui/php:8.4-nextcloud
 ~~~
 
 ### With compose
@@ -45,9 +45,9 @@ docker run -d \
 You can use this container in a docker-compose.yml file:
 
 ~~~yaml
-  php83:
-    container_name: php83
-    image: llaumgui/php:8.3-nextcloud
+  php84:
+    container_name: php84
+    image: llaumgui/php:8.4-nextcloud
     restart: always
     environment:
       TZ: 'Europe/Paris'
