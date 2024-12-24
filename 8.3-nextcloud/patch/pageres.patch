@@ -1,0 +1,13 @@
+--- cli.js	2024-09-20 11:47:51.746178276 +0200
++++ cli-new.js	2024-09-20 11:48:37.388920896 +0200
+@@ -95,6 +95,11 @@
+ async function generate(arguments_, options) {
+ 	const pageres = new Pageres({
+ 		incrementalName: !options.overwrite,
++                launchOptions: {
++                    executablePath: process.env.CHROMIUM_PATH,
++                    args: ['--no-sandbox'],
++                    headless: 'new',
++                }
+ 	})
+ 		.destination(process.cwd());
