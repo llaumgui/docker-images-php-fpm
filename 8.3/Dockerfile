@@ -3,13 +3,6 @@
 # @see: https://store.docker.com/images/php
 FROM php:8.3-fpm-alpine
 
-LABEL org.opencontainers.image.title="llaumgui/php-fpm"
-LABEL org.opencontainers.image.description="Fork of php-fpm:8.3"
-LABEL org.opencontainers.image.vendor="Guillaume Kulakowski"
-LABEL org.opencontainers.image.authors="guillaume@kulakowski.fr"
-LABEL org.opencontainers.image.licenses="MIT"
-LABEL org.opencontainers.image.version="8.3"
-
 
 # ---------------------------------------------------------- Setup build options
 ARG DOCKER_PHP_ENABLE_APCU="on"
