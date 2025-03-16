@@ -5,23 +5,48 @@
 [![Latest Version][ico-version]][link-docker]
 [![Software License][ico-license]](LICENSE)
 
-Repository with my php-fpm's Dockerfile for my Docker/Podman images.
+Repository with my php-fpm Dockerfile for my Docker/Podman images.
 
-## Usage from Docker Hub
+## Alpine based php-fpm Docker image
+
+Available for:
+
+* PHP 8.4
+* PHP 8.3
+
+Usage:
 
 ```bash
 docker pull llaumgui/php
 ```
 
-And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.3).
-
-## Usage from GitHub Packages
+or:
 
 ```bash
 docker pull ghcr.io/llaumgui/php:latest
 ```
 
-And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.3).
+And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.4).
+
+## Debian based php-fpm Docker image for Nextcloud
+
+Available for:
+
+* PHP 8.4
+
+Usage:
+
+```bash
+docker pull llaumgui/php:8.4-nextcloud-fpm
+```
+
+or:
+
+```bash
+docker pull ghcr.io/llaumgui/php:8.4-nextcloud-fpm
+```
+
+And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.4-nextcloud).
 
 [ico-docker]: https://img.shields.io/docker/pulls/llaumgui/php?color=%2496ed&logo=docker&style=flat-square
 [link-docker]: https://hub.docker.com/r/llaumgui/php
