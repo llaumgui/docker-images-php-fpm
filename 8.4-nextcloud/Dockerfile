@@ -208,5 +208,6 @@ WORKDIR /var/www
 
 # Remove default entrypoint to call php-cli.
 ENTRYPOINT []
-COPY --chmod=755 start.sh /
+COPY --chmod=755 /bin/start.sh /
+COPY --chmod=755 /bin/init-*.sh /bin/
 CMD ["/start.sh"]

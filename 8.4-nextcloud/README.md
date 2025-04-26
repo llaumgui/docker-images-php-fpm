@@ -16,10 +16,17 @@
 * Inspired by the [official Nextcloud image](https://github.com/nextcloud/docker/blob/09fecda4067434c11f955cdd3000ed950fe48d04/27/fpm/Dockerfile) (`nextcloud:fpm`).
 * **Includes several optimizations** to enhance performance and reliability.
 * Utilizes [Supervisor](http://supervisord.org/) to manage multiple processes.
+- Allow to run scripts on init ([from LinuxServer.io](https://docs.linuxserver.io/general/container-customization/#custom-scripts)). See [examples](8.4-nextcloud/custom-cont-init.d).
 
 ### Use PUID / GUID
 
-You can use PUID / GUID to use a non root user specific instead of the www-data's PID 82.
+You can use PUID / GUID to use a non root user specific instead of the www-data's PID 82. For that, just set environment variables:
+
+```yaml
+  environment:
+    PUID: 'NEXTCLOUD_PUID'
+    PGID: 'NEXTCLOUD_PGID'
+```
 
 ### Implements cron jobs
 * Runs the Nextcloud cron job every 5 minutes.
