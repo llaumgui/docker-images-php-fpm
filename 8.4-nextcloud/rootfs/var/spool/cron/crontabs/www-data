@@ -1,0 +1,4 @@
+# min   hour    day     month   weekday command
+*/5     *       *       *       *       /usr/local/bin/nc_cron.sh
+*/10    *       *       *       *       /usr/local/bin/nc_cron_preview.sh
+5       4       *       *       *       /usr/local/bin/nc_cron_ext_update.sh

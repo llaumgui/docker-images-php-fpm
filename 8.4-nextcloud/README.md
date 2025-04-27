@@ -1,61 +1,103 @@
 # PHP 8.4-nextcloud (PHP-FPM) on Debian (GLibC)
 
+[![Author][ico-bluesky]][link-bluesky]
 [![Build Status][ico-ghactions]][link-ghactions]
 [![Docker Pulls][ico-docker]][link-docker]
 [![Latest Version][ico-version]][link-docker]
 [![License][ico-license]](LICENSE)
 
-> ⚠ **Warning:** This image is a **PHP-FPM** container and does **not** include Nextcloud.
-> - Nextcloud must be mounted separately using a Docker volume to allow updates via the web-based update process.
-> - A web server such as **[Apache](https://github.com/llaumgui/docker-images-httpd/)** is required to serve Nextcloud.
+---
+> ⚠ **Warning:** This image is a **PHP-FPM container** and **does not include** Nextcloud or a web server.
+>
+> - Nextcloud must be mounted separately via a Docker volume to allow web updates.
+> - A web server like **[Apache](https://github.com/llaumgui/docker-images-httpd/)** is required to serve Nextcloud.
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Customization](#customization)
+- [Usage](#usage)
+- [Full stack Docker Compose examples](#full-stack-docker-compose-examples)
+- [BASH or ZSH alias](#bash-or-zsh-alias)
+
+---
 
 ## Features
 
-* Forked from the official PHP-FPM build with Debian Linux (`php:8.4-fpm`).
-  **Uses Debian with GLibC for [Recognize](https://github.com/nextcloud/recognize) with *native speed mode*.**
-* Inspired by the [official Nextcloud image](https://github.com/nextcloud/docker/blob/09fecda4067434c11f955cdd3000ed950fe48d04/27/fpm/Dockerfile) (`nextcloud:fpm`).
-* **Includes several optimizations** to enhance performance and reliability.
-* Utilizes [Supervisor](http://supervisord.org/) to manage multiple processes.
-- Allow to run scripts on init ([from LinuxServer.io](https://docs.linuxserver.io/general/container-customization/#custom-scripts)). See [examples](8.4-nextcloud/custom-cont-init.d).
+- **Based on** the official PHP-FPM Debian image (`php:8.4-fpm`). Uses Debian with GLibC for [Recognize](https://github.com/nextcloud/recognize) in *native speed mode*.
+- **Inspired by** the [official Nextcloud image](https://github.com/nextcloud/docker/blob/09fecda4067434c11f955cdd3000ed950fe48d04/27/fpm/Dockerfile) (`nextcloud:fpm`) and [LinuxServer.io](https://www.linuxserver.io/).
+- **Optimized** for better performance and reliability.
 
-### Use PUID / GUID
+### s6-overlay integration
+
+Use [s6-overlay](https://github.com/just-containers/s6-overlay) for:
+
+- Multi-process container management and customization.
+- Allows running custom scripts.
+- Override PHP and PHP-FPM configurations easily.
+- Supports changing the UID/GID running PHP-FPM.
+
+### Cron Jobs
+
+- Runs the Nextcloud cron job every 5 minutes.
+- Runs `preview:pre-generate` cron job every 10 minutes if [Preview Generator](https://github.com/nextcloud/previewgenerator) is present.
+- Automatically updates extensions daily if `NC_EXT_UPDATE` is defined.
+- Includes [Healthcheck](https://healthchecks.io/).
+  - Nextcloud cron job configured via `HEALTHCHECKS_NC_URL`.
+  - Preview Generator job configured via `HEALTHCHECKS_PREVIEW_URL`.
+  - Automatic daily updates configured via `HEALTHCHECKS_UPDATE_URL`.
+
+### Fulltext Search Support
+
+Includes [Full Text Search](https://apps.nextcloud.com/apps/fulltextsearch) support:
+
+- Installs [Tesseract](https://github.com/tesseract-ocr/tesseract) and [OCRmyPDF](https://ocrmypdf.readthedocs.io/en/latest/) for OCR capabilities.
+- Enables `occ fulltextsearch:live` for automatic indexing of new content (only if Full Text Search is present).
+
+### Other Features
+
+- **Additional binaries:**
+  - Git.
+  - [php-fpm-healthcheck](https://github.com/renatomefi/php-fpm-healthcheck).
+  - Python and `python3-venv` (for [LLM](https://apps.nextcloud.com/apps/llm) support).
+  - NodeJS for Recognize and [pageres-cli](https://github.com/sindresorhus/pageres-cli).
+  - Pageres-cli for website screenshot generation.
+- **Recommended configurations included:**
+  - APCu, igbinary, OPCache, Postgres support, PHP security hardening.
+- **Dedicated `php-cli.ini`** for CLI scripts.
+
+---
+
+## Customization
+
+### Custom UID/GID
 
 You can use PUID / GUID to use a non root user specific instead of the www-data's PID 82. For that, just set environment variables:
 
 ```yaml
-  environment:
-    PUID: 'NEXTCLOUD_PUID'
-    PGID: 'NEXTCLOUD_PGID'
+environment:
+  PUID: 'NEXTCLOUD_PUID'
+  PGID: 'NEXTCLOUD_PGID'
 ```
 
-### Implements cron jobs
-* Runs the Nextcloud cron job every 5 minutes.
-* Runs `preview:pre-generate` cron job every 10 minutes if [Preview Generator](https://github.com/nextcloud/previewgenerator) is present.
-* Automatically updates extensions daily if `NC_EXT_UPDATE` is defined.
-* Includes [Healthcheck](https://healthchecks.io/).
-  * Nextcloud cron job configured via `HEALTHCHECKS_NC_URL`.
-  * Preview Generator job configured via `HEALTHCHECKS_PREVIEW_URL`.
-  * Automatic daily updates configured via `HEALTHCHECKS_UPDATE_URL`.
+### Custom PHP and PHP-FPM Configuration
 
-### Full-Text Search Support
-Includes [Full Text Search](https://apps.nextcloud.com/apps/fulltextsearch) support:
-* Installs [Tesseract](https://github.com/tesseract-ocr/tesseract) and [OCRmyPDF](https://ocrmypdf.readthedocs.io/en/latest/) for OCR capabilities.
-* Enables `occ fulltextsearch:live` for automatic indexing of new content (only if Full Text Search is present).
+You can include your own PHP (`/usr/local/etc/php/conf.d`) and PHP-FPM (`/usr/local/etc/php-fpm.d/`) configuration files:
 
-### Additional Features
-* **Additional Binaries:**
-  * Git.
-  * [php-fpm-healthcheck](https://github.com/renatomefi/php-fpm-healthcheck).
-  * Python and `python3-venv` for [Local Large Language Model](https://apps.nextcloud.com/apps/llm).
-  * NodeJS for [Recognize](https://github.com/nextcloud/recognize) and [pageres-cli](https://github.com/sindresorhus/pageres-cli).
-  * [pageres-cli](https://github.com/sindresorhus/pageres-cli) for website screenshot generation.
-* **Configuration:**
-  * Recommended APCu configuration.
-  * Recommended igbinary configuration.
-  * Recommended OPCache configuration.
-  * Recommended Postgres configuration.
-  * Recommended Security configuration.
-  * A dedicated `php-cli.ini`
+- For PHP: mount your files to `/custom-php-conf-init.d`
+- For PHP-FPM: mount your files to `/custom-php-fpm-conf-init.d`
+
+👉 See the [example](examples/custom-php-fpm-conf-init.d/).
+
+### Custom initialization Scripts
+
+You can execute custom scripts at container initialization, for example, to install additional software or modify configurations. Just put it in `/custom-script-init.d`
+
+👉 See the [example](examples/custom-script-init.d/).
+
+---
 
 ## Usage
 
@@ -82,13 +124,15 @@ docker run -d \
 | `PUID`                     | User ID for the httpd process (www-data).         | `33`          |
 | `PGID`                     | Group ID for the httpd process (www-data).        | `33`          |
 
+---
+
 ## Full stack Docker Compose examples
 
 > ⚠ **Warning:** Replace `NEXTCLOUD_DOMAIN`, `HEALTHCHECKS_DOMAIN` and `NEXTCLOUD_PUID` / `NEXTCLOUD_PGID`.
 
 You can use this container in a docker-compose.yml file:
 
-~~~yaml
+```yaml
 # Services definition part
 services:
 
@@ -131,11 +175,11 @@ services:
       - /srv/storage:/srv/storage
     expose:
       - 9000
-~~~
+```
 
 You can also use with [Traefik](https://traefik.io/traefik/), [PostgreSQL](https://www.postgresql.org/), and [Collabora](https://www.collaboraonline.com/fr/):
 
-~~~yaml
+```yaml
 # Services definition part
 services:
 
@@ -240,14 +284,18 @@ services:
       test: ["CMD-SHELL", "curl -s http://localhost:9980 | grep OK || exit 1"]
       interval: 1m
       start_period: 2m
-~~~
+```
 
-### BASH or ZSH alias
+---
+
+## BASH or ZSH alias
 
 ```bash
 alias occ="docker exec -u NEXTCLOUD_PUID -i nextcloud_php php /var/www/occ"
 ```
 
+[ico-bluesky]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=208bfe&logo=bluesky&style=flat-square
+[link-bluesky]: https://bsky.app/profile/llaumgui.kulakowski.fr
 [ico-docker]: https://img.shields.io/docker/pulls/llaumgui/php?color=%2496ed&logo=docker&style=flat-square
 [link-docker]: https://hub.docker.com/r/llaumgui/php
 [ico-ghactions]: https://img.shields.io/github/actions/workflow/status/llaumgui/docker-images-php-fpm/devops.yml?branch=main&style=flat-square&logo=github&label=CI/CD

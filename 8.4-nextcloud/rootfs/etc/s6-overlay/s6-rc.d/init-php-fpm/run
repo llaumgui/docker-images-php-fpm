@@ -1,0 +1,42 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash
+
+# Idea and code inspired from https://www.linuxserver.io/ under the GPLv3 license.
+# https://github.com/linuxserver/docker-baseimage-debian/blob/master/root/etc/s6-overlay/s6-rc.d/init-custom-files/run
+
+# Directories
+CUSTOM_CONF_PHP_DIR="/custom-php-conf-init.d"
+CONF_PHP_DIR="/usr/local/etc/php/conf.d"
+CUSTOM_CONF_PHP_FPM_DIR="/custom-php-fpm-conf-init.d"
+CONF_PHP_FPM_DIR="/usr/local/etc/php-fpm.d/"
+
+# Make sure custom init directory exists and has files in it
+if [[ -e "${CUSTOM_CONF_PHP_DIR}" ]] && [[ -n "$(/bin/ls -A ${CUSTOM_CONF_PHP_DIR} 2>/dev/null)" ]]; then
+    echo "[custom-conf-init] Custom php config found, copy..."
+    for CONF in "${CUSTOM_CONF_PHP_DIR}"/*; do
+        NAME="$(basename "${CONF}")"
+        if [[ -f "${CONF}" ]]; then
+            echo "[custom-conf-ps aux] ${NAME}: copied to ${CONF_PHP_DIR}"
+            cp "${CONF}" ${CONF_PHP_DIR}
+        elif [[ ! -f "${CONF}" ]]; then
+            echo "[custom-conf-init] ${NAME}: is not a file"
+        fi
+    done
+else
+    echo "[custom-conf-init] No custom php config found, skipping..."
+fi
+
+if [[ -e "${CUSTOM_CONF_PHP_FPM_DIR}" ]] && [[ -n "$(/bin/ls -A ${CUSTOM_CONF_PHP_FPM_DIR} 2>/dev/null)" ]]; then
+    echo "[custom-conf-init] Custom php-fpm config found, copy..."
+    for CONF in "${CUSTOM_CONF_PHP_FPM_DIR}"/*; do
+        NAME="$(basename "${CONF}")"
+        if [[ -f "${CONF}" ]]; then
+            echo "[custom-conf-init] ${NAME}: copied to ${CONF_PHP_DIR}"
+            cp "${CONF}" ${CONF_PHP_FPM_DIR}
+        elif [[ ! -f "${CONF}" ]]; then
+            echo "[custom-conf-init] ${NAME}: is not a file"
+        fi
+    done
+else
+    echo "[custom-conf-init] No custom php-fpm config found, skipping..."
+fi

@@ -4,14 +4,33 @@
 FROM php:8.4-fpm
 
 
-# ---------------------------------------------------- Set environment variables
-# Need by pageres
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-ENV CHROMIUM_PATH /usr/bin/chromium
+# -------------------------------------------- Set environment and ARG variables
+ENV \
+    # Need by pageres
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    CHROMIUM_PATH=/usr/bin/chromium \
+    # Set default PUID / PGUID \
+    PUID=82 \
+    PGID=82 \
+    # Setup s6 overlay
+    S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
+    S6_VERBOSITY=2
+ARG \
+    # Set version for s6 overlay \
+    ARG S6_OVERLAY_VERSION="3.2.0.2" \
+    ARG S6_OVERLAY_ARCH="x86_64"
 
-# Add PUID / PGUID support
-ENV PUID=82
-ENV PGID=82
+
+# ------------------------------------------------------------------- s6 overlay
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
+# Optional symlinks
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
 
 
 # ----------------------------------------------------------------- Install cron
@@ -19,23 +38,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install --no-install-recommends -y \
         busybox-static; \
-    rm -rf /var/lib/apt/lists/*; \
-    mkdir -p /var/spool/cron/crontabs
-COPY --chmod=755 cron/www-data /var/spool/cron/crontabs/
-COPY --chmod=755 cron/*.sh /
-
-
-# ------------------------------------------------------------------ Supervisord
-RUN set -eux; \
-    apt-get update; \
-    apt-get install --no-install-recommends -y \
-        # Install supervisor to start multiple processes on container startup \
-        supervisor; \
-    rm -rf /var/lib/apt/lists/*; \
-    mkdir "/var/run/supervisor"; \
-    rm -rf /etc/supervisor/*
-COPY supervisor/*.conf /etc/supervisor
-COPY supervisor/*.sh /
+    rm -rf /var/lib/apt/lists/*;
 
 
 # --------------------------------------------- Install Search and LLM utilities
@@ -44,7 +47,6 @@ RUN set -eux; \
     apt-get install --no-install-recommends -y \
         # Install tesseract and ocrmypdf for OCR \
         tesseract-ocr \
-        tesseract-ocr-fra \
         tesseract-ocr-eng \
         ocrmypdf \
         # Install Python for Local Large language model \
@@ -115,10 +117,10 @@ RUN set -eux; \
         zlib1g-dev" ; \
     apt-get update ; \
     apt-get install --no-install-recommends -y ${fetchDeps}; \
-\
-\
+    rm -rf /var/lib/apt/lists/*
+
 # ------------------------------------------------------- Install php extensions \
-    php -m; \
+RUN php -m; \
     debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)"; \
     docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp; \
     docker-php-ext-configure ldap --with-libdir="lib/${debMultiarch}"; \
@@ -139,21 +141,20 @@ RUN set -eux; \
         shmop \
         soap \
         sysvsem \
-        zip; \
-    php -m; \
-\
-\
-# ------------------------------------------------------ Install pecl extensions \
-    php -m; \
+        zip;
+
+
+# ------------------------------------------------------ Install pecl extensions
+RUN php -m; \
     pecl install apcu; \
     pecl install igbinary; \
     #pecl install imagick; \
     # Tempory workaround - BEGIN \
     git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick; \
-    cd /tmp/imagick; \
+    cd /tmp/imagick || exit; \
     git fetch origin master; \
     git switch master; \
-    cd /tmp/imagick; \
+    cd /tmp/imagick || exit; \
     sed -i 's/php_strtolower/zend_str_tolower/g' imagick.c; \
     phpize; \
     ./configure; \
@@ -168,19 +169,22 @@ RUN set -eux; \
         imagick \
         redis; \
     rm -r /tmp/pear; \
-    php -m ; \
-\
-\
-# ------------------------------------------------------------------ Big cleanup \
-    npm install -g pageres-cli; \
-    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${fetchDeps}; \
+    php -m ;
+
+
+# -------------------------------------------------------------- Install pageres
+RUN npm install -g pageres-cli;
+
+
+# ------------------------------------------------------------------ Big cleanup
+RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${fetchDeps}; \
     rm -rf /var/lib/apt/lists/* \
            /tmp/* \
            /var/tmp/* \
            /usr/share/doc/*
 
 
-# -------------------------------------------------- Install php-fpm-healthcheck
+# -------------------------------------- Install php-fpm-healthcheck & cachetool
 RUN sed -i 's#^;pm.status_path = .*#pm.status_path = /status#g' /usr/local/etc/php-fpm.d/www.conf; \
     wget  --progress=dot:giga -O /usr/local/bin/php-fpm-healthcheck https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck; \
     chmod +x /usr/local/bin/php-fpm-healthcheck; \
@@ -189,25 +193,23 @@ RUN sed -i 's#^;pm.status_path = .*#pm.status_path = /status#g' /usr/local/etc/p
 
 
 # ---------------------------------------------------------------- Configuration
-# My configuration.
-COPY php.d /usr/local/etc/php/conf.d
-COPY etc /usr/local/etc/php
+# Healthcheck
+HEALTHCHECK --interval=1m --timeout=10s --start-period=1m --retries=3 CMD FCGI_CONNECT=localhost:9000 php-fpm-healthcheck
 
-# Patch
+# Patch pageres
 COPY patch /tmp
 RUN cd /usr/local/lib/node_modules/pageres-cli && patch -p0 < /tmp/pageres.patch && rm -f /tmp/pageres.patch
 
 # Remove access log
 RUN sed -i 's#^access.log = /proc/self/fd/2#access.log = /dev/null#g' /usr/local/etc/php-fpm.d/docker.conf
 
-# Healthcheck
-HEALTHCHECK --interval=1m --timeout=10s --start-period=1m --retries=3 CMD FCGI_CONNECT=localhost:9000 php-fpm-healthcheck
+# Copy all rootfs files with configuration and others scripts
+COPY rootfs/ /
+RUN chmod 755 /etc/s6-overlay/s6-rc.d/*/run && \
+chmod 755 /etc/s6-overlay/s6-rc.d/*/up && \
+    chmod 755 /usr/local/bin/nc_*.sh
 
 EXPOSE 9000
 WORKDIR /var/www
 
-# Remove default entrypoint to call php-cli.
-ENTRYPOINT []
-COPY --chmod=755 /bin/start.sh /
-COPY --chmod=755 /bin/init-*.sh /bin/
-CMD ["/start.sh"]
+ENTRYPOINT ["/init"]

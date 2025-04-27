@@ -1,0 +1,15 @@
+#!/command/with-contenv bash
+# shellcheck shell=bash
+
+echo '
+───────────────────────────────────────
+To get support, please go to:
+https://github.com/llaumgui/docker-images-php-fpm
+
+───────────────────────────────────────
+GID/UID
+───────────────────────────────────────'
+echo "
+User UID:    $(id -u www-data)
+User GID:    $(id -g www-data)
+───────────────────────────────────────"
