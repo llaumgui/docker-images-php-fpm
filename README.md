@@ -29,26 +29,6 @@ docker pull ghcr.io/llaumgui/php:latest
 
 And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.4).
 
-## Debian based php-fpm Docker image for Nextcloud
-
-Available for:
-
-* PHP 8.4
-
-Usage:
-
-```bash
-docker pull llaumgui/php:8.4-nextcloud-fpm
-```
-
-or:
-
-```bash
-docker pull ghcr.io/llaumgui/php:8.4-nextcloud-fpm
-```
-
-And see [documentation](https://github.com/llaumgui/docker-images-php-fpm/tree/main/8.4-nextcloud).
-
 [ico-bluesky]: https://img.shields.io/static/v1?label=Author&message=llaumgui&color=208bfe&logo=bluesky&style=flat-square
 [link-bluesky]: https://bsky.app/profile/llaumgui.kulakowski.fr
 [ico-docker]: https://img.shields.io/docker/pulls/llaumgui/php?color=%2496ed&logo=docker&style=flat-square
