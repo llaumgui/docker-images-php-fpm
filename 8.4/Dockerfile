@@ -72,7 +72,7 @@ RUN apk add --update --no-cache --virtual .docker-php-global-dependancies \
         oniguruma-dev \
         # Build dependencies for XML part \
         libxml2-dev \
-        ldb-dev \
+        ldb \
         # Build dependencies for Zip \
         libzip-dev \
         # Build dependancies for Pecl \
