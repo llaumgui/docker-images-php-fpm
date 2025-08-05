@@ -1,7 +1,7 @@
 # My php-fpm image, based on alpine Linux, configured and forked from the
 # official PHP docker repository.
 # @see: https://store.docker.com/images/php
-FROM php:8.3-fpm-alpine
+FROM php:8.4.11-fpm-alpine
 
 
 # ---------------------------------------------------------- Setup build options
