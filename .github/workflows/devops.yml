@@ -21,7 +21,7 @@ jobs:
     name: Linters for Dockerfile
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
     - name: hadolint
@@ -38,7 +38,7 @@ jobs:
     name: Linters and checkstyle
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
     - name: Use markdownlint-cli2
@@ -60,7 +60,7 @@ jobs:
         php-version: ["8.3", "8.4"]
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
     # Extract metadata (tags, labels) for Docker
@@ -114,7 +114,7 @@ jobs:
         php-version: ["8.3", "8.4"]
     steps:
     - name: Git checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
     # Login against 2 Docker registries except on PR
