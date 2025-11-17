@@ -42,7 +42,7 @@ jobs:
       with:
         fetch-depth: 0
     - name: Use markdownlint-cli2
-      uses: DavidAnson/markdownlint-cli2-action@v20
+      uses: DavidAnson/markdownlint-cli2-action@v21
       with:
         config: .markdownlint.yaml
     - name: Use editorconfig-checker
