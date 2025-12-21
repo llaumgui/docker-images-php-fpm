@@ -148,18 +148,7 @@ RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
       # Build dependancy for imagick \
       apk add --update --no-cache --virtual .docker-php-imagick-dependancies \
           imagemagick-dev && \
-      #printf "\n" | pecl install imagick && \
-      # Tempory workaround - BEGIN \
-      git clone https://github.com/Imagick/imagick.git --depth 1 /tmp/imagick && \
-      cd /tmp/imagick && \
-      git fetch origin master && \
-      git switch master && \
-      cd /tmp/imagick && \
-      phpize && \
-      ./configure && \
-      make && \
-      make install && \
-      # Tempory workaround - END \
+      printf "\n" | pecl install imagick && \
       docker-php-ext-enable imagick && \
       apk del .docker-php-imagick-dependancies && \
       php -m; \
