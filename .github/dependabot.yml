@@ -14,6 +14,7 @@ updates:
   # Maintain dependencies for npm
   - package-ecosystem: "docker"
     directories:
+      - "/8.5"
       - "/8.4"
     schedule:
       interval: "daily"
