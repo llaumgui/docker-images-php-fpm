@@ -13,7 +13,6 @@ Repository with my php-fpm Dockerfile for my Docker/Podman images.
 Available for:
 
 * PHP 8.4
-* PHP 8.3
 
 Usage:
 

@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["8.3", "8.4"]
+        php-version: ["8.4"]
     steps:
     - name: Git checkout
       uses: actions/checkout@v6
@@ -111,7 +111,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["8.3", "8.4"]
+        php-version: ["8.4"]
     steps:
     - name: Git checkout
       uses: actions/checkout@v6
