@@ -11,6 +11,7 @@ PHP 8.4 image:
 * Forked from [official PHP-FPM build with alpine Linux](https://store.docker.com/images/php) (php:8.4-fpm-alpine).
 * Additionals PHP extensions:
   * bcmath
+  * brotli
   * gd
   * gmp
   * intl

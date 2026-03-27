@@ -6,6 +6,7 @@ FROM php:8.5-fpm-alpine
 
 # ---------------------------------------------------------- Setup build options
 ARG DOCKER_PHP_ENABLE_APCU="on"
+ARG DOCKER_PHP_ENABLE_BROTLI="on"
 ARG DOCKER_PHP_ENABLE_COMPOSER="on"
 ARG DOCKER_PHP_ENABLE_EXIF="on"
 ARG DOCKER_PHP_ENABLE_IMAGICK="on"
@@ -23,6 +24,7 @@ ARG DOCKER_PHP_ENABLE_XDEBUG="off"
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
 RUN echo "With apcu support:          " ; if [ "${DOCKER_PHP_ENABLE_APCU}" = "on" ] ;       then echo "Yes"; else echo "No" ; fi && \
+    echo "With brotli support:        " ; if [ "${DOCKER_PHP_ENABLE_BROTLI}" = "on" ] ;     then echo "Yes"; else echo "No" ; fi && \
     echo "With composer support:      " ; if [ "${DOCKER_PHP_ENABLE_COMPOSER}" = "on" ] ;   then echo "Yes"; else echo "No" ; fi && \
     echo "With exif support:          " ; if [ "${DOCKER_PHP_ENABLE_EXIF}" = "on" ] ;       then echo "Yes"; else echo "No" ; fi && \
     echo "With imagick support:       " ; if [ "${DOCKER_PHP_ENABLE_IMAGICK}" = "on" ] ;    then echo "Yes"; else echo "No" ; fi && \
@@ -124,6 +126,23 @@ RUN if [ "${DOCKER_PHP_ENABLE_APCU}" != "off" ]; then \
       echo "Skip apcu support"; \
     fi
 
+# Enable Brotli
+RUN if [ "${DOCKER_PHP_ENABLE_BROTLI}" != "off" ]; then \
+      cd /tmp && \
+      git clone --recursive --depth=1 https://github.com/kjdev/php-ext-brotli.git && \
+      cd php-ext-brotli && \
+      phpize && \
+      ./configure && \
+      make && \
+      make install && \
+      cd /tmp && \
+      rm -rf php-ext-brotli && \
+      docker-php-ext-enable brotli && \
+      php -m; \
+    else \
+      echo "Skip brotli support"; \
+    fi
+
 # Enable EXIF
 RUN if [ "${DOCKER_PHP_ENABLE_EXIF}" != "off" ]; then \
       docker-php-ext-install exif && \
@@ -132,7 +151,6 @@ RUN if [ "${DOCKER_PHP_ENABLE_EXIF}" != "off" ]; then \
     else \
       echo "Skip apcu support"; \
     fi
-
 
 # Enable imagick
 RUN if [ "${DOCKER_PHP_ENABLE_IMAGICK}" != "off" ]; then \
