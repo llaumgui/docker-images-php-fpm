@@ -10,11 +10,12 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "⬆️ [Actions] "
 
-  # Maintain dependencies for npm
+  # Maintain dependencies for docker
   - package-ecosystem: "docker"
-    directories:
-      - "/8.5"
-      - "/8.4"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "⬆️ [Docker] "
